@@ -1,0 +1,108 @@
+//
+//  Copyright © 2023 Hidden Spectrum, LLC. All rights reserved.
+//
+
+import Foundation
+import StoreKit
+
+
+public final class TestingAnalyticsProvider: AnalyticsProvider {
+    
+    // MARK: Internal
+    
+    var trackedEvents = [EventLog]()
+    var trackedScreenViews = [ScreenViewLog]()
+    var trackedTransactions = [Transaction]()
+    var userId: String?
+    var userPropertiesSet = [AnalyticsUserProperty: AnalyticsParameterValue?]()
+    
+    // MARK: Lifecycle
+    
+    public init() {
+    }
+    
+    // MARK: AnalyticsProvider
+    
+    public func setup() {
+    }
+    
+    
+    public func setUserId(_ userId: String?) {
+        self.userId = userId
+    }
+    
+    public func setUserProperty(_ property: AnalyticsUserProperty, to value: AnalyticsParameterValue?) {
+        userPropertiesSet[property] = value
+    }
+    
+    public func registerGlobalProperties(_ properties: AnalyticsParameters) {
+    }
+    
+    public func unregisterGlobalProperty(_ property: AnalyticsParameter) {
+    }
+    
+    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters?) {
+        trackedScreenViews.append(
+            ScreenViewLog(screen: screen, class: screenClass, parameters: parameters ?? [:])
+        )
+    }
+    
+    public func logEvent(_ event: AnalyticsEvent, additionalParameters: AnalyticsParameters) {
+        trackedEvents.append(
+            EventLog(event: event, additionalParameters: additionalParameters)
+        )
+    }
+    
+    public func logTransaction(_ transaction: Transaction) {
+        trackedTransactions.append(transaction)
+    }
+    
+    // MARK: XCTest
+    
+    public func removeAllTrackedInfo() {
+        trackedEvents.removeAll()
+        trackedScreenViews.removeAll()
+        userPropertiesSet.removeAll()
+    }
+    
+    // MARK: Verification
+    
+    public func wasEventTracked(_ event: AnalyticsEvent) -> Bool {
+        return trackedEvents.first(where: { $0.event == event }) != nil
+    }
+    
+    public func wasScreenViewTracked(_ screen: AnalyticsScreen) -> Bool {
+        return trackedScreenViews.first(where: { $0.screen == screen }) != nil
+    }
+    
+    public func findSetValue(for userProperty: AnalyticsUserProperty) -> AnalyticsParameterValue? {
+        if let foundValue = userPropertiesSet[userProperty] {
+            return foundValue
+        } else {
+            return nil
+        }
+    }
+}
+
+extension TestingAnalyticsProvider {
+    struct EventLog: Equatable, Sendable {
+        let event: AnalyticsEvent
+        let additionalParameters: AnalyticsParameters?
+        
+        static func == (lhs: EventLog, rhs: EventLog) -> Bool {
+            lhs.event == rhs.event
+        }
+    }
+    
+    struct ScreenViewLog: Equatable, Sendable {
+        let screen: AnalyticsScreen
+        let `class`: String
+        let parameters: AnalyticsParameters
+        
+        static func == (lhs: ScreenViewLog, rhs: ScreenViewLog) -> Bool {
+            lhs.screen == rhs.screen
+            && lhs.class == rhs.class
+            && lhs.parameters == rhs.parameters
+        }
+    }
+}
