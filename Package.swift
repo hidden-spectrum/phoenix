@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "PhoenixPH", targets: ["PhoenixPH"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/PostHog/posthog-ios.git", from: "3.20.0"),
+        .package(url: "https://github.com/PostHog/posthog-ios.git", from: "3.22.1"),
     ],
     targets: [
         .target(
