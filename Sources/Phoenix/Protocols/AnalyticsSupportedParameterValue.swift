@@ -35,18 +35,4 @@ extension Bool: AnalyticsSupportedParameterValue {}
 extension Double: AnalyticsSupportedParameterValue {}
 extension Int: AnalyticsSupportedParameterValue {}
 extension Int64: AnalyticsSupportedParameterValue {}
-
-extension Optional: AnalyticsSupportedParameterValue where Wrapped == Sendable {
-    public func isEqualTo(_ other: AnalyticsSupportedParameterValue?) -> Bool {
-        if self == nil && other == nil {
-            return true
-        }
-        if let unwrapped = self as? AnalyticsSupportedParameterValue {
-            return unwrapped.isEqualTo(other)
-        } else {
-            return false
-        }
-    }
-}
-
 extension String: AnalyticsSupportedParameterValue {}

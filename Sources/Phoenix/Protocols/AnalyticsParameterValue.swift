@@ -21,15 +21,8 @@ extension Array: AnalyticsParameterValue where Element: AnalyticsParameterValue 
     }
 }
 
-extension Optional: AnalyticsParameterValue where Wrapped: AnalyticsParameterValue {
-    public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
-        self?.analyticsSupportedValue
-    }
-}
-
 extension RawRepresentable where RawValue: AnalyticsSupportedParameterValue, Self: AnalyticsParameterValue {
     public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
         rawValue
     }
 }
-
