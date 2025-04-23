@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Phoenix",
-    platforms: [.iOS(.v15), .macOS(.v12), .tvOS(.v15)],
+    platforms: [.iOS(.v16), .macOS(.v13), .tvOS(.v16)],
     products: [
         .library(name: "Phoenix", targets: ["Phoenix"]),
         .library(name: "PhoenixPH", targets: ["PhoenixPH"]),

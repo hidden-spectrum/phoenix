@@ -66,7 +66,7 @@ struct AnalyticsParametersTests {
     func testAnalyticsSupportedValueEmpty() {
         let parameters: AnalyticsParameters = [:]
         let analyticsValue = parameters.analyticsSupportedValue
-        let typecastDictionary = (analyticsValue as? [String: AnalyticsSupportedParameterValue]) ?? [:]
+        let typecastDictionary = (analyticsValue as? [String: AnalyticsParameterValue]) ?? [:]
         #expect(typecastDictionary.isEmpty)
     }
     
@@ -74,7 +74,7 @@ struct AnalyticsParametersTests {
     func testAnalyticsSupportedValueNonEmpty() {
         let parameters: AnalyticsParameters = [.contentId: 1234]
         let firebaseValue = parameters.analyticsSupportedValue
-        let typecastDictionary = (firebaseValue as? [String: AnalyticsSupportedParameterValue]) ?? [:]
+        let typecastDictionary = (firebaseValue as? [String: AnalyticsParameterValue]) ?? [:]
         #expect(typecastDictionary.isEmpty == false)
         #expect(typecastDictionary["content_id"] as? Int == 1234)
     }

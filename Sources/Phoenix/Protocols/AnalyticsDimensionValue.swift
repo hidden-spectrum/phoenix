@@ -8,14 +8,5 @@ import Foundation
 protocol AnalyticsDimensionValue: AnalyticsParameterValue {
 }
 
-extension Bool: AnalyticsDimensionValue {
-    public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
-        self
-    }
-}
-
-extension StringLiteralType: AnalyticsDimensionValue {
-    public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
-        self
-    }
-}
+extension Bool: AnalyticsDimensionValue {}
+extension StringLiteralType: AnalyticsDimensionValue {}

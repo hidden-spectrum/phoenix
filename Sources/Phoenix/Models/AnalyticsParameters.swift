@@ -18,8 +18,10 @@ public extension AnalyticsParameters {
     mutating func combine(with otherParameters: AnalyticsParameters?) {
         self = combining(with: otherParameters)
     }
-    
-    func mappedToAnalyticsParameters() -> [String: Any] {
+}
+
+extension AnalyticsParameters: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any {
         let mappedDictionary: [String: Any] = .init(uniqueKeysWithValues: compactMap { key, value in
             guard let value else {
                 return nil
@@ -30,21 +32,10 @@ public extension AnalyticsParameters {
     }
 }
 
-extension AnalyticsParameters: AnalyticsParameterValue {
-    public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
-        let mappedDictionary: [String: AnalyticsSupportedParameterValue] = .init(uniqueKeysWithValues: compactMap { key, value in
-            guard let value else {
-                return nil
-            }
-            return (key.rawValue, value.analyticsSupportedValue)
-        })
-        return mappedDictionary
-    }
-}
-
- 
 public func ==(lhs: AnalyticsParameters, rhs: AnalyticsParameters) -> Bool {
-    guard lhs.keys == rhs.keys else { return false }
+    guard lhs.count == rhs.count, lhs.keys == rhs.keys else {
+        return false
+    }
     
     for key in lhs.keys {
         switch (lhs[key], rhs[key]) {
@@ -54,11 +45,7 @@ public func ==(lhs: AnalyticsParameters, rhs: AnalyticsParameters) -> Bool {
             if lhsValue == nil && rhsValue == nil {
                 continue
             }
-            
-            guard let lhsValue = lhsValue, let rhsValue = rhsValue else {
-                return false
-            }
-            if !lhsValue.analyticsSupportedValue.isEqualTo(rhsValue.analyticsSupportedValue) {
+            if !areEqual(lhsValue as Any, rhsValue as Any) {
                 return false
             }
         default: // One is nil and the other is not
@@ -68,3 +55,4 @@ public func ==(lhs: AnalyticsParameters, rhs: AnalyticsParameters) -> Bool {
     
     return true
 }
+

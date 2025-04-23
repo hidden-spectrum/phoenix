@@ -5,15 +5,13 @@
 import Foundation
 
 
-public struct AnalyticsElementName: ExpressibleByStringLiteral {
+public struct AnalyticsElementName: Equatable, ExpressibleByStringLiteral {
     
     // MARK: Public
     
     public typealias ElementName = AnalyticsElementName
     
-    // MARK: Internal
-    
-    let stringValue: String
+    public let stringValue: String
     
     // MARK: Lifecycle
     
@@ -27,10 +25,5 @@ public struct AnalyticsElementName: ExpressibleByStringLiteral {
 }
 
 extension AnalyticsElementName: AnalyticsParameterValue {
-    public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
-        stringValue
-    }
-}
-
-extension AnalyticsElementName: Equatable {
+    public var analyticsSupportedValue: Any { stringValue }
 }

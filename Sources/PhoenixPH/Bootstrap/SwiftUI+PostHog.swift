@@ -9,6 +9,6 @@ import SwiftUI
 
 public extension View {
     func analyticsScreen(_ screen: AnalyticsScreen, parameters: AnalyticsParameters = [:]) -> some View {
-        postHogScreenView(screen.rawValue, parameters.mappedToAnalyticsParameters())
+        postHogScreenView(screen.rawValue, parameters.mappedToPostHogParameters())
     }
 }

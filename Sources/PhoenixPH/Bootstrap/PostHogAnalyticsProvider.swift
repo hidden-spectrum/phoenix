@@ -5,7 +5,6 @@
 @_exported import Phoenix
 @_exported import PostHog
 
-import PostHog
 import StoreKit
 
 
@@ -29,6 +28,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     // MARK: AnalyticsProvider
     
     public func setup() {
+        postHog.reloadFeatureFlags()
     }
     
     public func setUserId(_ userId: String?) {
@@ -39,12 +39,16 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     }
     
     public func setUserProperty(_ property: AnalyticsUserProperty, to value: AnalyticsParameterValue?) {
+        guard let value = value?.analyticsSupportedValue as? PostHogParameterValue else {
+            assertionFailure("Unsupported value type for PostHog: \(String(describing: value))")
+            return
+        }
         let userId = userId ?? postHog.getDistinctId()
-        postHog.identify(userId, userProperties: [property.rawValue: value?.analyticsSupportedValue as Any])
+        postHog.identify(userId, userProperties: [property.rawValue: value])
     }
     
     public func registerGlobalProperties(_ properties: AnalyticsParameters) {
-        postHog.register(properties.mappedToAnalyticsParameters())
+        postHog.register(properties.mappedToPostHogParameters())
     }
     
     public func unregisterGlobalProperty(_ property: AnalyticsParameter) {
@@ -52,16 +56,12 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     }
     
     public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters?) {
-        postHog.screen(screen.rawValue, properties: parameters?.mappedToAnalyticsParameters() ?? [:])
+        postHog.screen(screen.rawValue, properties: parameters?.mappedToPostHogParameters() ?? [:])
     }
     
     public func logEvent(_ event: AnalyticsEvent, additionalParameters: AnalyticsParameters) {
         let finalParameters = event.parameters
             .combining(with: additionalParameters)
-        postHog.capture(event.rawValue, properties: finalParameters.mappedToAnalyticsParameters())
-    }
-    
-    public func logTransaction(_ transaction: Transaction) {
-        
+        postHog.capture(event.rawValue, properties: finalParameters.mappedToPostHogParameters())
     }
 }

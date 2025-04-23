@@ -6,23 +6,36 @@ import Foundation
 
 
 public protocol AnalyticsParameterValue: Sendable {
-    var analyticsSupportedValue: AnalyticsSupportedParameterValue { get }
+    var analyticsSupportedValue: Any { get }
 }
 
-extension AnalyticsParameterValue where Self: Equatable {
-    public static func ==(lhs: Self, rhs: Self) -> Bool {
-        return lhs.analyticsSupportedValue.isEqualTo(rhs.analyticsSupportedValue)
-    }
-}
 
-extension Array: AnalyticsParameterValue where Element: AnalyticsParameterValue & AnalyticsSupportedParameterValue {
-    public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
+extension Array: AnalyticsParameterValue where Element: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any {
         map { $0.analyticsSupportedValue }
     }
 }
-
-extension RawRepresentable where RawValue: AnalyticsSupportedParameterValue, Self: AnalyticsParameterValue {
-    public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
-        rawValue
-    }
+extension Bool: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { self }
+}
+extension Date: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { self }
+}
+extension Decimal: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { formatted(.number) }
+}
+extension Double: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { self }
+}
+extension Int: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { self }
+}
+extension Int64: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { self }
+}
+extension RawRepresentable where RawValue: AnalyticsParameterValue, Self: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { rawValue }
+}
+extension String: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { self }
 }

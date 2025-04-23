@@ -5,7 +5,7 @@
 import Foundation
 
 
-public struct AnalyticsElementType {
+public struct AnalyticsElementType: Equatable {
     
     // MARK: Public
     
@@ -33,10 +33,6 @@ public extension AnalyticsElementType {
 }
 
 extension AnalyticsElementType: AnalyticsParameterValue {
-    public var analyticsSupportedValue: AnalyticsSupportedParameterValue {
-        rawValue
-    }
+    public var analyticsSupportedValue: Any { rawValue }
 }
 
-extension AnalyticsElementType: Equatable {
-}

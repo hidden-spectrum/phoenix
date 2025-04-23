@@ -19,3 +19,9 @@ public protocol AnalyticsProvider {
     func logEvent(_ event: AnalyticsEvent, additionalParameters: AnalyticsParameters)
     func logTransaction(_ transaction: Transaction)
 }
+
+public extension AnalyticsProvider {
+    func logTransaction(_ transaction: Transaction) {
+        logEvent(.appStoreTransaction(transaction), additionalParameters: [:])
+    }
+}
