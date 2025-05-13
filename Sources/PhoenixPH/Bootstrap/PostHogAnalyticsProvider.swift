@@ -39,12 +39,16 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     }
     
     public func setUserProperty(_ property: AnalyticsUserProperty, to value: AnalyticsParameterValue?) {
-        guard let value = value?.analyticsSupportedValue as? PostHogParameterValue else {
+        guard let value else {
+            postHog.unregister(property.rawValue)
+            return
+        }
+        guard let postHogValue = value.analyticsSupportedValue as? PostHogParameterValue else {
             assertionFailure("Unsupported value type for PostHog: \(String(describing: value))")
             return
         }
         let userId = userId ?? postHog.getDistinctId()
-        postHog.identify(userId, userProperties: [property.rawValue: value])
+        postHog.identify(userId, userProperties: [property.rawValue: postHogValue])
     }
     
     public func registerGlobalProperties(_ properties: AnalyticsParameters) {
