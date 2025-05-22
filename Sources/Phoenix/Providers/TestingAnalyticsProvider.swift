@@ -47,9 +47,9 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
         )
     }
     
-    public func logEvent(_ event: AnalyticsEvent, additionalParameters: AnalyticsParameters) {
+    public func logEvent(_ event: AnalyticsEvent, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
         trackedEvents.append(
-            EventLog(event: event, additionalParameters: additionalParameters)
+            EventLog(event: event, screen: screen, additionalParameters: additionalParameters)
         )
     }
     
@@ -87,10 +87,12 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
 extension TestingAnalyticsProvider {
     struct EventLog: Equatable, Sendable {
         let event: AnalyticsEvent
+        let screen: AnalyticsScreen?
         let additionalParameters: AnalyticsParameters?
         
         static func == (lhs: EventLog, rhs: EventLog) -> Bool {
             lhs.event == rhs.event
+            && lhs.screen == rhs.screen
         }
     }
     

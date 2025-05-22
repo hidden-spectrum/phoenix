@@ -44,12 +44,17 @@ public struct Phoenix: Sendable {
         provider.logScreenView(screen, class: screenClass, parameters: parameters)
     }
     
-    public func logEvent(_ event: AnalyticsEvent, object: AnalyticsParametersProvider? = nil, additionalParameters: AnalyticsParameters = [:]) {
+    public func logEvent(
+        _ event: AnalyticsEvent,
+        on screen: AnalyticsScreen? = nil,
+        object: AnalyticsParametersProvider? = nil,
+        additionalParameters: AnalyticsParameters = [:]
+    ) {
         var allParameters = additionalParameters
         if let object {
             allParameters.combine(with: object.analyticsParameters)
         }
-        provider.logEvent(event, additionalParameters: allParameters)
+        provider.logEvent(event, on: screen, additionalParameters: allParameters)
     }
     
     public func logTransaction(_ transaction: Transaction) {
@@ -58,16 +63,34 @@ public struct Phoenix: Sendable {
     
     // MARK: Convenience Methods
     
-    public func logElementClick(name: AnalyticsElementName, type: AnalyticsElementType, value: AnalyticsParameterValue? = nil, parameters: AnalyticsParameters = [:]) {
-        logEvent(.clickElement(name: name, type: type, value: value), additionalParameters: parameters)
+    public func logElementClick(
+        name: AnalyticsElementName,
+        type: AnalyticsElementType,
+        value: AnalyticsParameterValue? = nil,
+        on screen: AnalyticsScreen? = nil,
+        parameters: AnalyticsParameters = [:]
+    ) {
+        logEvent(
+            .elementClick(name: name, type: type, value: value),
+            on: screen,
+            additionalParameters: parameters
+        )
     }
     
-    public func logElementClick(_ element: AnalyticsElement, parameters: AnalyticsParameters = [:]) {
-        logEvent(.clickElement(element), additionalParameters: parameters)
+    public func logElementClick(
+        _ element: AnalyticsElement,
+        on screen: AnalyticsScreen? = nil,
+        parameters: AnalyticsParameters = [:]
+    ) {
+        logEvent(.elementClick(element), on: screen, additionalParameters: parameters)
     }
     
-    public func logElementCopy(_ element: AnalyticsElement, parameters: AnalyticsParameters = [:]) {
-        logEvent(.copyElement(element), additionalParameters: parameters)
+    public func logElementCopy(
+        _ element: AnalyticsElement,
+        on screen: AnalyticsScreen? = nil,
+        parameters: AnalyticsParameters = [:]
+    ) {
+        logEvent(.elementCopy(element), on: screen, additionalParameters: parameters)
     }
     
     // MARK: User Properties

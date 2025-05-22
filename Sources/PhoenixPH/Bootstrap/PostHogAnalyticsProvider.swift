@@ -63,9 +63,15 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         postHog.screen(screen.rawValue, properties: parameters?.mappedToPostHogParameters() ?? [:])
     }
     
-    public func logEvent(_ event: AnalyticsEvent, additionalParameters: AnalyticsParameters) {
+    public func logEvent(_ event: AnalyticsEvent, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
         let finalParameters = event.parameters
             .combining(with: additionalParameters)
+            .combining(with: [.screenName: screen?.rawValue])
         postHog.capture(event.rawValue, properties: finalParameters.mappedToPostHogParameters())
     }
+}
+
+
+extension AnalyticsParameter {
+    static let screenName = Parameter("$screen_name")
 }

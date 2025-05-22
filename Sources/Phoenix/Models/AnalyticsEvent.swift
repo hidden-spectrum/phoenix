@@ -28,12 +28,12 @@ extension AnalyticsEvent {
     
     // MARK: Standard
     
-    static func clickElement(name: AnalyticsElementName, type: AnalyticsElementType, value: AnalyticsParameterValue?) -> Self {
-        elementAction("click_element", name: name, type: type, value: value)
+    static func elementClick(name: AnalyticsElementName, type: AnalyticsElementType, value: AnalyticsParameterValue?) -> Self {
+        elementAction("element_click", name: name, type: type, value: value)
     }
     
-    static func copyElement(name: AnalyticsElementName, type: AnalyticsElementType, value: AnalyticsParameterValue?) -> Self {
-        elementAction("copy_element", name: name, type: type, value: value)
+    static func elementCopy(name: AnalyticsElementName, type: AnalyticsElementType, value: AnalyticsParameterValue?) -> Self {
+        elementAction("element_copy", name: name, type: type, value: value)
     }
     
     static func elementAction(_ eventName: String, name: AnalyticsElementName, type: AnalyticsElementType, value: AnalyticsParameterValue?) -> Self {
@@ -51,12 +51,12 @@ extension AnalyticsEvent {
     
     // MARK: Convenience
     
-    static func clickElement(_ element: AnalyticsElement) -> Self {
-        clickElement(name: element.analyticsName, type:  element.analyticsType, value: element.analyticsValue)
+    static func elementClick(_ element: AnalyticsElement) -> Self {
+        elementClick(name: element.analyticsName, type:  element.analyticsType, value: element.analyticsValue)
     }
     
-    static func copyElement(_ element: AnalyticsElement) -> Self {
-        copyElement(name: element.analyticsName, type: element.analyticsType, value: element.analyticsValue)
+    static func elementCopy(_ element: AnalyticsElement) -> Self {
+        elementCopy(name: element.analyticsName, type: element.analyticsType, value: element.analyticsValue)
     }
 }
 

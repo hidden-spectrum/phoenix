@@ -16,12 +16,12 @@ public protocol AnalyticsProvider {
     func unregisterGlobalProperty(_ property: AnalyticsParameter)
     
     func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters?)
-    func logEvent(_ event: AnalyticsEvent, additionalParameters: AnalyticsParameters)
+    func logEvent(_ event: AnalyticsEvent, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
     func logTransaction(_ transaction: Transaction)
 }
 
 public extension AnalyticsProvider {
     func logTransaction(_ transaction: Transaction) {
-        logEvent(.appStoreTransaction(transaction), additionalParameters: [:])
+        logEvent(.appStoreTransaction(transaction), on: nil, additionalParameters: [:])
     }
 }
