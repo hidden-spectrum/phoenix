@@ -51,7 +51,17 @@ extension Transaction.OwnershipType: AnalyticsParameterValue {}
 extension Transaction.RevocationReason: AnalyticsParameterValue {}
 
 @available(iOS 17.2, macOS 14.2, tvOS 17.2, *)
-extension Transaction.OfferType: AnalyticsParameterValue {}
+extension Transaction.OfferType: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any {
+        switch self {
+        case .introductory: "Introductory"
+        case .promotional:  "Promotional"
+        case .code:         "Promo Code"
+        case .winBack:      "Win-Back"
+        default:            String(describing: self)
+        }
+    }
+}
 
 @available(iOS 17.2, macOS 14.2, tvOS 17.2, *)
 extension Transaction.Reason: AnalyticsParameterValue {}
