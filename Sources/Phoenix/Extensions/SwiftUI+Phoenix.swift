@@ -13,15 +13,15 @@ public extension EnvironmentValues {
 
 @MainActor
 public extension Button {
-    func analyticsClick(name: AnalyticsElementName, parameters: AnalyticsParameters = [:]) -> some View {
-        analyticsClick(name: name, type: .button, parameters: parameters)
+    func analyticsClick(name: AnalyticsElementName, screen: AnalyticsScreen? = nil, parameters: AnalyticsParameters = [:]) -> some View {
+        analyticsClick(name: name, type: .button, screen: screen, parameters: parameters)
     }
 }
 
 @MainActor
 public extension Text {
-    func analyticsClick(name: AnalyticsElementName, parameters: AnalyticsParameters = [:]) -> some View {
-        analyticsClick(name: name, type: .text, parameters: parameters)
+    func analyticsClick(name: AnalyticsElementName, screen: AnalyticsScreen? = nil, parameters: AnalyticsParameters = [:]) -> some View {
+        analyticsClick(name: name, type: .text, screen: screen, parameters: parameters)
     }
 }
 
@@ -31,10 +31,11 @@ public extension View {
         name: AnalyticsElementName,
         type: AnalyticsElementType,
         value: AnalyticsParameterValue? = nil,
+        screen: AnalyticsScreen? = nil,
         parameters: AnalyticsParameters = [:]
     ) -> some View {
         modifier(
-            AnalyticsClickViewModifier(name: name, type: type, value: value, parameters: parameters)
+            AnalyticsClickViewModifier(name: name, type: type, value: value, screen: screen, parameters: parameters)
         )
     }
 }
@@ -51,6 +52,7 @@ struct AnalyticsClickViewModifier: ViewModifier {
     private let type: AnalyticsElementType
     private let value: AnalyticsParameterValue?
     private let parameters: AnalyticsParameters
+    private let screenOverride: AnalyticsScreen?
     
     // MARK: Lifecycle
     
@@ -58,11 +60,13 @@ struct AnalyticsClickViewModifier: ViewModifier {
         name: AnalyticsElementName,
         type: AnalyticsElementType,
         value: AnalyticsParameterValue? = nil,
+        screen: AnalyticsScreen? = nil,
         parameters: AnalyticsParameters = [:]
     ) {
         self.name = name
         self.type = type
         self.value = value
+        self.screenOverride = screen
         self.parameters = parameters
     }
     
@@ -76,7 +80,7 @@ struct AnalyticsClickViewModifier: ViewModifier {
                         name: name,
                         type: type,
                         value: value,
-                        on: screen,
+                        on: screenOverride ?? screen,
                         parameters: parameters,
                     )
                 }
