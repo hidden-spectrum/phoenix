@@ -14,7 +14,7 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     var trackedScreenViews = [ScreenViewLog]()
     var trackedTransactions = [Transaction]()
     var userId: String?
-    var userPropertiesSet = [AnalyticsUserProperty: AnalyticsParameterValue?]()
+    var userPropertiesSet = [AnalyticsParameter: AnalyticsParameterValue?]()
     
     // MARK: Lifecycle
     
@@ -31,8 +31,14 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
         self.userId = userId
     }
     
-    public func setUserProperty(_ property: AnalyticsUserProperty, to value: AnalyticsParameterValue?) {
+    public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
         userPropertiesSet[property] = value
+    }
+    
+    public func setUserProperties(_ properties: AnalyticsParameters) {
+        for (property, value) in properties {
+            userPropertiesSet[property] = value
+        }
     }
     
     public func registerGlobalProperties(_ properties: AnalyticsParameters) {
@@ -75,7 +81,7 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
         return trackedScreenViews.first(where: { $0.screen == screen }) != nil
     }
     
-    public func findSetValue(for userProperty: AnalyticsUserProperty) -> AnalyticsParameterValue? {
+    public func findSetValue(for userProperty: AnalyticsParameter) -> AnalyticsParameterValue? {
         if let foundValue = userPropertiesSet[userProperty] {
             return foundValue
         } else {

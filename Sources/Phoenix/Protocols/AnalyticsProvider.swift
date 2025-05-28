@@ -10,7 +10,8 @@ public protocol AnalyticsProvider {
     func setup()
     
     func setUserId(_ userId: String?)
-    func setUserProperty(_ property: AnalyticsUserProperty, to value: AnalyticsParameterValue?)
+    func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?)
+    func setUserProperties(_ properties: AnalyticsParameters)
     
     func registerGlobalProperties(_ properties: AnalyticsParameters)
     func unregisterGlobalProperty(_ property: AnalyticsParameter)

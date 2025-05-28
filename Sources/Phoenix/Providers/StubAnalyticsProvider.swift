@@ -21,7 +21,10 @@ public struct StubAnalyticsProvider: AnalyticsProvider {
     public func setUserId(_ userId: String?) {
     }
     
-    public func setUserProperty(_ property: AnalyticsUserProperty, to value: AnalyticsParameterValue?) {
+    public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
+    }
+    
+    public func setUserProperties(_ properties: AnalyticsParameters) {
     }
     
     public func registerGlobalProperties(_ properties: AnalyticsParameters) {

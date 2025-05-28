@@ -55,4 +55,3 @@ public func ==(lhs: AnalyticsParameters, rhs: AnalyticsParameters) -> Bool {
     
     return true
 }
-

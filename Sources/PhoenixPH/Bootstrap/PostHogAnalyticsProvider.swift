@@ -38,7 +38,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         }
     }
     
-    public func setUserProperty(_ property: AnalyticsUserProperty, to value: AnalyticsParameterValue?) {
+    public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
         guard let value else {
             postHog.unregister(property.rawValue)
             return
@@ -49,6 +49,11 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         }
         let userId = userId ?? postHog.getDistinctId()
         postHog.identify(userId, userProperties: [property.rawValue: postHogValue])
+    }
+    
+    public func setUserProperties(_ properties: AnalyticsParameters) {
+        let userId = userId ?? postHog.getDistinctId()
+        postHog.identify(userId, userProperties: properties.mappedToPostHogParameters())
     }
     
     public func registerGlobalProperties(_ properties: AnalyticsParameters) {

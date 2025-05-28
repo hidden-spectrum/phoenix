@@ -99,8 +99,12 @@ public struct Phoenix: Sendable {
         provider.setUserId(userId)
     }
     
-    public func setUserProperty(_ property: AnalyticsUserProperty, to value: AnalyticsParameterValue?) {
+    public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
         provider.setUserProperty(property, to: value)
+    }
+    
+    public func setUserProperties(_ properties: AnalyticsParameters) {
+        provider.setUserProperties(properties)
     }
     
     // MARK: Global Properties
