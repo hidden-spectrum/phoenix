@@ -38,7 +38,4 @@ public struct StubAnalyticsProvider: AnalyticsProvider {
     
     public func logEvent(_ event: AnalyticsEvent, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
     }
-    
-    public func logTransaction(_ transaction: Transaction) {
-    }
 }

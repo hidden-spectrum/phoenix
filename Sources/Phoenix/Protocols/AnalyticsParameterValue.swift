@@ -22,7 +22,7 @@ extension Date: AnalyticsParameterValue {
     public var analyticsSupportedValue: Any { self }
 }
 extension Decimal: AnalyticsParameterValue {
-    public var analyticsSupportedValue: Any { formatted(.number) }
+    public var analyticsSupportedValue: Any { Double(truncating: self as NSDecimalNumber) }
 }
 extension Double: AnalyticsParameterValue {
     public var analyticsSupportedValue: Any { self }

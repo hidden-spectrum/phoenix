@@ -72,7 +72,8 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         let finalParameters = event.parameters
             .combining(with: additionalParameters)
             .combining(with: [.screenName: screen?.rawValue])
-        postHog.capture(event.rawValue, properties: finalParameters.mappedToPostHogParameters())
+            .mappedToPostHogParameters()
+        postHog.capture(event.rawValue, properties: finalParameters)
     }
 }
 
