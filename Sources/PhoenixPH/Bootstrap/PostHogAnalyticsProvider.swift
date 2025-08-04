@@ -75,9 +75,20 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             .mappedToPostHogParameters()
         postHog.capture(event.rawValue, properties: finalParameters)
     }
-}
-
-
-extension AnalyticsParameter {
-    static let screenName = Parameter("$screen_name")
+    
+    public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
+        let exception: AnalyticsParameters = [
+            .type: String(describing: type(of: error)),
+            .value: error.localizedDescription,
+        ]
+        let errorParameters: AnalyticsParameters = [
+            .exceptionList: [exception]
+        ]
+                                                  
+        logEvent(
+            .exception,
+            on: screen,
+            additionalParameters: errorParameters.combining(with: additionalParameters)
+        )
+    }
 }
