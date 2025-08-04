@@ -9,6 +9,7 @@ import Phoenix
 protocol PostHogParameterValue: AnalyticsParameterValue {
 }
 
+extension AnalyticsParameters: PostHogParameterValue {}
 extension Array: PostHogParameterValue where Element: PostHogParameterValue {}
 extension Bool: PostHogParameterValue {}
 extension Date: PostHogParameterValue {}

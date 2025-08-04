@@ -77,13 +77,18 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     }
     
     public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
-        let errorParameters: AnalyticsParameters = [
-            .exceptionMessage: error.localizedDescription,
-            .exceptionType: String(describing: type(of: error)),
-            .exceptionStacktrace: Thread.callStackSymbols.joined(separator: "\n")
+        let exception: AnalyticsParameters = [
+            .type: String(describing: type(of: error)),
+            .value: error.localizedDescription,
         ]
-        logEvent(.exception, on: screen, additionalParameters: errorParameters.combining(with: additionalParameters))
+        let errorParameters: AnalyticsParameters = [
+            .exceptionList: [exception]
+        ]
+                                                  
+        logEvent(
+            .exception,
+            on: screen,
+            additionalParameters: errorParameters.combining(with: additionalParameters)
+        )
     }
 }
-
-

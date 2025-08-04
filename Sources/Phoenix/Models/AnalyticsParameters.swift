@@ -20,17 +20,6 @@ public extension AnalyticsParameters {
     }
 }
 
-extension AnalyticsParameters: AnalyticsParameterValue {
-    public var analyticsSupportedValue: Any {
-        let mappedDictionary: [String: Any] = .init(uniqueKeysWithValues: compactMap { key, value in
-            guard let value else {
-                return nil
-            }
-            return (key.rawValue, value.analyticsSupportedValue)
-        })
-        return mappedDictionary
-    }
-}
 
 public func ==(lhs: AnalyticsParameters, rhs: AnalyticsParameters) -> Bool {
     guard lhs.count == rhs.count, lhs.keys == rhs.keys else {
