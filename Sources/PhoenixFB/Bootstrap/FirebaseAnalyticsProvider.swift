@@ -2,6 +2,7 @@
 //  Copyright © 2023 Hidden Spectrum, LLC. All rights reserved.
 //
 
+@_exported import Phoenix
 import FirebaseCore
 import FirebaseAnalytics
 import Foundation
@@ -43,8 +44,27 @@ public struct FirebaseAnalyticsProvider: AnalyticsProvider {
         Analytics.setUserID(userId)
     }
     
-    public func setUserProperty(_ property: AnalyticsUserProperty, to value: String?) {
-        Analytics.setUserProperty(value, forName: property.rawValue)
+    public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
+        guard let value else {
+            Analytics.setUserProperty(nil, forName: property.rawValue)
+            return
+        }
+        Analytics.setUserProperty(String(describing: value.analyticsSupportedValue), forName: property.rawValue)
+    }
+    
+    public func setUserProperties(_ properties: AnalyticsParameters) {
+        for (property, value) in properties {
+            setUserProperty(property, to: value)
+        }
+    }
+    
+    public func registerGlobalProperties(_ properties: AnalyticsParameters) {
+        Analytics.setDefaultEventParameters(properties.mappedToFirebaseParameters())
+    }
+    
+    public func unregisterGlobalProperty(_ property: AnalyticsParameter) {
+        // Firebase doesn't support unregistering individual properties
+        // This would require maintaining a local copy of global properties
     }
     
     public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters?) {
@@ -54,9 +74,12 @@ public struct FirebaseAnalyticsProvider: AnalyticsProvider {
         Analytics.logEvent(AnalyticsEventScreenView, parameters: mappedParameters)
     }
     
-    public func logEvent(_ event: AnalyticsEvent, additionalParameters: AnalyticsParameters) {
+    public func logEvent(_ event: AnalyticsEvent, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
         var finalParameters = event.parameters
             .combining(with: additionalParameters)
+        if let screen {
+            finalParameters[.screenName] = screen.rawValue
+        }
         if event.parameters[.value] != nil {
             finalParameters[.currency] = config.itemCurrency
         }

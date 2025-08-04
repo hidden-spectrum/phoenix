@@ -13,6 +13,7 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     var trackedEvents = [EventLog]()
     var trackedScreenViews = [ScreenViewLog]()
     var trackedTransactions = [Transaction]()
+    var trackedErrors = [ErrorLog]()
     var userId: String?
     var userPropertiesSet = [AnalyticsParameter: AnalyticsParameterValue?]()
     
@@ -63,11 +64,18 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
         trackedTransactions.append(transaction)
     }
     
+    public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
+        trackedErrors.append(
+            ErrorLog(error: error, screen: screen, additionalParameters: additionalParameters)
+        )
+    }
+    
     // MARK: XCTest
     
     public func removeAllTrackedInfo() {
         trackedEvents.removeAll()
         trackedScreenViews.removeAll()
+        trackedErrors.removeAll()
         userPropertiesSet.removeAll()
     }
     
@@ -87,6 +95,10 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
         } else {
             return nil
         }
+    }
+    
+    public func wasErrorTracked(_ errorType: String) -> Bool {
+        return trackedErrors.first(where: { String(describing: type(of: $0.error)) == errorType }) != nil
     }
 }
 
@@ -112,5 +124,11 @@ extension TestingAnalyticsProvider {
             && lhs.class == rhs.class
             && lhs.parameters == rhs.parameters
         }
+    }
+    
+    struct ErrorLog: Sendable {
+        let error: Error
+        let screen: AnalyticsScreen?
+        let additionalParameters: AnalyticsParameters?
     }
 }

@@ -116,4 +116,10 @@ public struct Phoenix: Sendable {
     public func unregisterGlobalProperty(_ property: AnalyticsParameter) {
         provider.unregisterGlobalProperty(property)
     }
+    
+    // MARK: Error Tracking
+    
+    public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
+        provider.logError(error, on: screen, additionalParameters: additionalParameters)
+    }
 }
