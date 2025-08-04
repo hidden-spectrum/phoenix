@@ -27,6 +27,8 @@ extension AnalyticsParameters {
             }
             if let value = value.analyticsSupportedValue as? PostHogParameterValue {
                 return (key.rawValue, value)
+            } else if let value = value as? [PostHogParameterValue] {
+                return (key.rawValue, value.map { $0.analyticsSupportedValue })
             } else {
                 assertionFailure("Value \(String(describing: value)) for key \(key) is not PostHogParameterValue")
                 return nil
