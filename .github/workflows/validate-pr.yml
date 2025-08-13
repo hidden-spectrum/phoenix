@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  validate-pr:
+  Build & Test:
     runs-on: macos-15
     
     steps:
