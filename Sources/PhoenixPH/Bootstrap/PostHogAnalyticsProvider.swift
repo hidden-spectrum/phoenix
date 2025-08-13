@@ -5,6 +5,7 @@
 @_exported import Phoenix
 @_exported import PostHog
 
+import OSLog
 import StoreKit
 
 
@@ -15,13 +16,14 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     private let config: PostHogConfig
     private let postHog = PostHogSDK.shared
     
-    private var userId: String?
+    private let log = Logger(subsystem: "io.hspec.phoenix", category: "PostHogAnalyticsProvider")
+    
+    private var userId: String? = nil
     
     // MARK: Lifecycle
     
     public init(with config: PostHogConfig) {
         self.config = config
-        self.userId = nil
         postHog.setup(config)
     }
     
@@ -43,16 +45,14 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             postHog.unregister(property.rawValue)
             return
         }
-        guard let postHogValue = value.analyticsSupportedValue as? PostHogParameterValue else {
-            assertionFailure("Unsupported value type for PostHog: \(String(describing: value))")
-            return
-        }
-        let userId = userId ?? postHog.getDistinctId()
-        postHog.identify(userId, userProperties: [property.rawValue: postHogValue])
+        setUserProperties([property: value])
     }
     
     public func setUserProperties(_ properties: AnalyticsParameters) {
-        let userId = userId ?? postHog.getDistinctId()
+        guard let userId else {
+            log.warning("PostHog userId not set, ignoring set user properties")
+            return
+        }
         postHog.identify(userId, userProperties: properties.mappedToPostHogParameters())
     }
     
