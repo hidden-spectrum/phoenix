@@ -36,7 +36,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     public func setUserId(_ userId: String?) {
         if let userId {
             postHog.identify(userId)
-            self.userId = userId
+            self.userId = postHog.getDistinctId()
         }
     }
     
