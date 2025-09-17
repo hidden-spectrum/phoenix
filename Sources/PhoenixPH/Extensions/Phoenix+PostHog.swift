@@ -12,6 +12,7 @@ extension AnalyticsEvent {
 
 extension AnalyticsParameter {
     static let exceptionList = Parameter("$exception_list")
+    static let screenName = Parameter("$screen_name")
     static let type = Parameter("type")
     static let value = Parameter("value")
 }
