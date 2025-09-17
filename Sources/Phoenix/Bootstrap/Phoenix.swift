@@ -40,7 +40,7 @@ public struct Phoenix: Sendable {
     
     // MARK: Basic Logging
     
-    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters? = [:]) {
+    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String? = nil, parameters: AnalyticsParameters? = [:]) {
         provider.logScreenView(screen, class: screenClass, parameters: parameters)
     }
     

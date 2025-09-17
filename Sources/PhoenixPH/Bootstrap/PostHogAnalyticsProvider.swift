@@ -64,7 +64,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         postHog.unregister(property.rawValue)
     }
     
-    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters?) {
+    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String? = nil, parameters: AnalyticsParameters?) {
         postHog.screen(screen.rawValue, properties: parameters?.mappedToPostHogParameters() ?? [:])
     }
     

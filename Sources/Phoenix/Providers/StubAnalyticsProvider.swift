@@ -33,7 +33,7 @@ public struct StubAnalyticsProvider: AnalyticsProvider {
     public func unregisterGlobalProperty(_ property: AnalyticsParameter) {
     }
     
-    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters?) {
+    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String? = nil, parameters: AnalyticsParameters?) {
     }
     
     public func logEvent(_ event: AnalyticsEvent, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
