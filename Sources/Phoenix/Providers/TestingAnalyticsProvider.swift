@@ -48,7 +48,7 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     public func unregisterGlobalProperty(_ property: AnalyticsParameter) {
     }
     
-    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters?) {
+    public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String? = nil, parameters: AnalyticsParameters?) {
         trackedScreenViews.append(
             ScreenViewLog(screen: screen, class: screenClass, parameters: parameters ?? [:])
         )
@@ -116,7 +116,7 @@ extension TestingAnalyticsProvider {
     
     struct ScreenViewLog: Equatable, Sendable {
         let screen: AnalyticsScreen
-        let `class`: String
+        let `class`: String?
         let parameters: AnalyticsParameters
         
         static func == (lhs: ScreenViewLog, rhs: ScreenViewLog) -> Bool {

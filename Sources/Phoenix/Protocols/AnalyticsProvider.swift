@@ -16,7 +16,7 @@ public protocol AnalyticsProvider {
     func registerGlobalProperties(_ properties: AnalyticsParameters)
     func unregisterGlobalProperty(_ property: AnalyticsParameter)
     
-    func logScreenView(_ screen: AnalyticsScreen, class screenClass: String, parameters: AnalyticsParameters?)
+    func logScreenView(_ screen: AnalyticsScreen, class screenClass: String?, parameters: AnalyticsParameters?)
     func logEvent(_ event: AnalyticsEvent, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
     func logTransaction(_ transaction: Transaction)
     func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
