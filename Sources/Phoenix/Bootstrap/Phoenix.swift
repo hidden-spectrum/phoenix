@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import OSLog
 import StoreKit
 
 
@@ -119,7 +120,17 @@ public struct Phoenix: Sendable {
     
     // MARK: Error Tracking
     
-    public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
+    public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:], outputTo log: Logger? = nil) {
+        if let log {
+            var errorText = error.localizedDescription
+            if let screen {
+                errorText += "\nAnalyticsScreen: \(screen.rawValue)"
+            }
+            if !additionalParameters.isEmpty {
+                errorText += "\nAdditional Params: \(additionalParameters)"
+            }
+            log.error("\(errorText)")
+        }
         provider.logError(error, on: screen, additionalParameters: additionalParameters)
     }
 }
