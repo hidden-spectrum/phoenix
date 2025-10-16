@@ -1,13 +1,13 @@
 {
-  "originHash" : "603aabe822b2ef2239ffc14cbe071cbcbcc73cd55d4c9c71d2a0f9afc36fbde7",
+  "originHash" : "538f5b64dccf31d2293f481e3ed98bdfca99784c611aa03ce3191582e79b0358",
   "pins" : [
     {
       "identity" : "posthog-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hidden-spectrum/posthog-ios.git",
+      "location" : "https://github.com/PostHog/posthog-ios",
       "state" : {
-        "branch" : "disable-swizzling",
-        "revision" : "b842e4dfbf3a84b3608368af7314f57837e1dadc"
+        "revision" : "ba5dd65d2341ab8ea1949f072594ef67c490af3a",
+        "version" : "3.34.0"
       }
     }
   ],
