@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "PhoenixPH", targets: ["PhoenixPH"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/hidden-spectrum/posthog-ios.git", branch: "disable-swizzling"),
+        .package(url: "https://github.com/PostHog/posthog-ios", from: "3.34.0"),
     ],
     targets: [
         .target(
