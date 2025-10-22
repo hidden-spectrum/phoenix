@@ -19,3 +19,7 @@ public struct AnalyticsScreen: Equatable, Sendable {
         self.rawValue = rawValue
     }
 }
+
+extension AnalyticsScreen: AnalyticsParameterValue {
+    public var analyticsSupportedValue: Any { rawValue }
+}
