@@ -69,6 +69,10 @@ public extension AnalyticsParameter {
     static let elementMetricValue   = Parameter("element_metric_value")
     static let elementType          = Parameter("element_type")
     
+    static let presentingElementName = Parameter("presenting_element_name")
+    static let presentingElementType = Parameter("presenting_element_type")
+    static let presentingScreenName  = Parameter("presenting_screen_name")
+    
     // MARK: Error Tracking
     
     static let errorDescription     = Parameter("error_description")
