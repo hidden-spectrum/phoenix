@@ -9,15 +9,6 @@ import StoreKit
 
 public struct Phoenix: Sendable {
     
-    // MARK: Public
-    
-    public var testing: TestingAnalyticsProvider {
-        guard let testingProvider = provider as? TestingAnalyticsProvider else {
-            preconditionFailure("Attempting to access testing provider when provider is not set for testing")
-        }
-        return testingProvider
-    }
-    
     // MARK: Private
     
     nonisolated(unsafe) private let provider: AnalyticsProvider
@@ -118,7 +109,7 @@ public struct Phoenix: Sendable {
         provider.unregisterGlobalProperty(property)
     }
     
-    // MARK: Error Tracking
+    // MARK: Error & Metrics Tracking
     
     public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:], outputTo log: Logger? = nil) {
         if let log {

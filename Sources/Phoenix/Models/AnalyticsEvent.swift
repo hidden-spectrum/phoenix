@@ -58,6 +58,10 @@ extension AnalyticsEvent {
     static func elementCopy(_ element: AnalyticsElement) -> Self {
         elementCopy(name: element.analyticsName, type: element.analyticsType, value: element.analyticsValue)
     }
+    
+    // MARK: Metrics
+    
+    
 }
 
 extension AnalyticsEvent: Equatable {
