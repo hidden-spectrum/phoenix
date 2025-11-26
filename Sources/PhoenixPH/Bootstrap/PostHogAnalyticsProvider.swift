@@ -74,6 +74,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             .combining(with: additionalParameters)
             .combining(with: [.screenName: screen?.rawValue])
             .mappedToPostHogParameters()
+        print(finalParameters)
         postHog.capture(event.rawValue, properties: finalParameters)
     }
     
@@ -96,7 +97,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         let signal = crash.signal?.intValue ?? 0
         let terminationReason = crash.terminationReason ?? "Unknown Termination"
         
-        let errorType = "MXCrashDiagnostic: Signal \(signal)"
+        let errorType = "Signal \(signal)"
         let errorValue = "Termination: \(terminationReason) (Code: \(exceptionCode), Type: \(exceptionType))"
         
         let exception: AnalyticsEvent = .exception(
@@ -107,7 +108,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         )
         
         logEvent(exception, on: nil, additionalParameters: [
-            .virtualMemoryRegionInfo: crash.virtualMemoryRegionInfo
+            .mxCrashVirtualMemoryRegionInfo: crash.virtualMemoryRegionInfo
         ])
     }
 }

@@ -57,7 +57,11 @@ extension MXMetricPayload: AnalyticsParametersProvider {
 }
 
 
-extension AnalyticsParameter {
+public extension AnalyticsParameter {
+    
+    // Crashes
+    
+    static let mxCrashVirtualMemoryRegionInfo = Parameter("mx_crash_virtual_memory_region_info")
     
     // Foreground Exits
     

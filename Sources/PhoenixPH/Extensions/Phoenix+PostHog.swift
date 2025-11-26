@@ -6,14 +6,15 @@ import Phoenix
 
 
 extension AnalyticsEvent {
-    static func exception(type: String, value: String, mechanismType: String? = nil, handled: Bool = false) -> Event {
-        var exceptionDetails: AnalyticsParameters = [
+    static func exception(type: String, value: String, mechanismType: String? = nil, handled: Bool = false, stacktrace: [AnalyticsParameters] = []) -> Event {
+        let exceptionDetails: AnalyticsParameters = [
             .type: type,
             .value: value,
             .mechanism: [
                 .type: mechanismType,
                 .handled: handled
-            ]
+            ],
+            .stacktrace: stacktrace
         ]
         
         let parameters: AnalyticsParameters = [
@@ -35,5 +36,9 @@ extension AnalyticsParameter {
     static let mechanism = Parameter("mechanism")
     static let handled = Parameter("handled")
     
-    static let virtualMemoryRegionInfo = Parameter("virtual_memory_region_info")
+    static let filename = Parameter("filename")
+    static let function = Parameter("function")
+    static let lineno = Parameter("lineno")
+    static let inApp = Parameter("in_app")
+    static let address = Parameter("address")
 }
