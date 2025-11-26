@@ -50,14 +50,6 @@ public struct Phoenix: Sendable {
         provider.logEvent(event, on: screen, additionalParameters: allParameters)
     }
     
-    public func logTransaction(_ transaction: Transaction) {
-        provider.logTransaction(transaction)
-    }
-    
-    public func logCrash(_ crashDiagnostic: MXCrashDiagnostic) {
-        provider.logCrash(crashDiagnostic)
-    }
-    
     // MARK: Convenience Methods
     
     public func logElementClick(
@@ -114,6 +106,12 @@ public struct Phoenix: Sendable {
         provider.unregisterGlobalProperty(property)
     }
     
+    // MARK: Transactions
+    
+    public func logTransaction(_ transaction: Transaction) {
+        provider.logTransaction(transaction)
+    }
+    
     // MARK: Error & Crash Logging
     
     public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:], outputTo log: Logger? = nil) {
@@ -128,5 +126,9 @@ public struct Phoenix: Sendable {
             log.error("\(errorText)")
         }
         provider.logError(error, on: screen, additionalParameters: additionalParameters)
+    }
+    
+    public func logCrash(_ crashDiagnostic: MXCrashDiagnostic) {
+        provider.logCrash(crashDiagnostic)
     }
 }
