@@ -104,7 +104,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             value: errorValue,
             mechanismType: "MetricKit",
             handled: false,
-            stacktrace: crash.callStackTree.toPostHogFrames()
+            stackTraceFrames: crash.callStackTree.toPostHogFrames()
         )
         
         logEvent(exception, on: nil, additionalParameters: [

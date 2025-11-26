@@ -6,7 +6,7 @@ import Phoenix
 
 
 extension AnalyticsEvent {
-    static func exception(type: String, value: String, mechanismType: String? = nil, handled: Bool = false, stacktrace: [AnalyticsParameters] = []) -> Event {
+    static func exception(type: String, value: String, mechanismType: String? = nil, handled: Bool = false, stackTraceFrames: [AnalyticsParameters] = []) -> Event {
         let exceptionDetails: AnalyticsParameters = [
             .type: type,
             .value: value,
@@ -14,7 +14,9 @@ extension AnalyticsEvent {
                 .type: mechanismType,
                 .handled: handled
             ],
-            .stacktrace: stacktrace
+            .stacktrace: [
+                .frames: stackTraceFrames
+            ]
         ]
         
         let parameters: AnalyticsParameters = [
@@ -31,7 +33,9 @@ extension AnalyticsParameter {
     static let exceptionList = Parameter("$exception_list")
     static let type = Parameter("type")
     static let value = Parameter("value")
+    
     static let stacktrace = Parameter("stacktrace")
+    static let frames = Parameter("frames")
     
     static let mechanism = Parameter("mechanism")
     static let handled = Parameter("handled")
