@@ -38,6 +38,7 @@ extension AnalyticsParameter {
     static let stacktrace = Parameter("stacktrace")
     static let frames = Parameter("frames")
     static let platform = Parameter("platform")
+    static let lang = AnalyticsParameter("lang")
     
     static let mechanism = Parameter("mechanism")
     static let handled = Parameter("handled")

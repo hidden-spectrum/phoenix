@@ -37,7 +37,8 @@ extension MXCallStackTree {
                 .lineno: 0,
                 .inApp: isAppFrame,
                 .absPath: addressString,
-                .platform: "custom"
+                .platform: "custom",
+                .lang: "swift"
             ]
             
             frames.append(frameDict)
