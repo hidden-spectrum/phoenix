@@ -23,8 +23,6 @@ public protocol AnalyticsProvider {
     func logTransaction(_ transaction: Transaction)
     
     func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
-    func logMetricsPayload(_ payload: MXMetricPayload)
-    func logDiagnosticPayload(_ payload: MXDiagnosticPayload)
 }
 
 public extension AnalyticsProvider {
@@ -39,14 +37,5 @@ public extension AnalyticsProvider {
         ]
         let errorEvent = AnalyticsEvent("error", parameters: errorParameters)
         logEvent(errorEvent, on: screen, additionalParameters: additionalParameters)
-    }
-    
-    func logMetricsPayload(_ payload: MXMetricPayload) {
-        
-    }
-    
-    func logDiagnosticPayload(_ payload: MXDiagnosticPayload) {
-        let event: AnalyticsEvent = .mxDiagnosticPayload(payload)
-//        logEvent(.mxDiagnosticPayload(payload), on: nil, additionalParameters: [:])
     }
 }
