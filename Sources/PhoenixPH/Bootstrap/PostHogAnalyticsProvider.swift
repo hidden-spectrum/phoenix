@@ -6,6 +6,7 @@
 @_exported import PostHog
 
 import OSLog
+import MetricKit
 import StoreKit
 
 
@@ -77,18 +78,37 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     }
     
     public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
-        let exception: AnalyticsParameters = [
-            .type: String(describing: type(of: error)),
-            .value: error.localizedDescription,
-        ]
-        let errorParameters: AnalyticsParameters = [
-            .exceptionList: [exception]
-        ]
+        let exception: AnalyticsEvent = .exception(
+            type: String(describing: type(of: error)),
+            value: error.localizedDescription
+        )
                                                   
         logEvent(
-            .exception,
+            exception,
             on: screen,
-            additionalParameters: errorParameters.combining(with: additionalParameters)
+            additionalParameters: additionalParameters
         )
+    }
+    
+    public func logCrash(_ crash: MXCrashDiagnostic) {
+        let exceptionType = crash.exceptionType?.intValue ?? 0
+        let exceptionCode = crash.exceptionCode?.intValue ?? 0
+        let signal = crash.signal?.intValue ?? 0
+        let terminationReason = crash.terminationReason ?? "Unknown Termination"
+        
+        let errorType = "Signal \(signal)"
+        let errorValue = "Termination: \(terminationReason) (Code: \(exceptionCode), Type: \(exceptionType))"
+        
+        let exception: AnalyticsEvent = .exception(
+            type: errorType,
+            value: errorValue,
+            mechanismType: "MetricKit",
+            handled: false,
+            stacktrace: crash.callStackTree.toPostHogFrames()
+        )
+        
+        logEvent(exception, on: nil, additionalParameters: [
+            .mxCrashVirtualMemoryRegionInfo: crash.virtualMemoryRegionInfo
+        ])
     }
 }

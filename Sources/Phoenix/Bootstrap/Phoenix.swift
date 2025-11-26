@@ -3,20 +3,12 @@
 //
 
 import Foundation
+import MetricKit
 import OSLog
 import StoreKit
 
 
 public struct Phoenix: Sendable {
-    
-    // MARK: Public
-    
-    public var testing: TestingAnalyticsProvider {
-        guard let testingProvider = provider as? TestingAnalyticsProvider else {
-            preconditionFailure("Attempting to access testing provider when provider is not set for testing")
-        }
-        return testingProvider
-    }
     
     // MARK: Private
     
@@ -56,10 +48,6 @@ public struct Phoenix: Sendable {
             allParameters.combine(with: object.analyticsParameters)
         }
         provider.logEvent(event, on: screen, additionalParameters: allParameters)
-    }
-    
-    public func logTransaction(_ transaction: Transaction) {
-        provider.logTransaction(transaction)
     }
     
     // MARK: Convenience Methods
@@ -118,7 +106,13 @@ public struct Phoenix: Sendable {
         provider.unregisterGlobalProperty(property)
     }
     
-    // MARK: Error Tracking
+    // MARK: Transactions
+    
+    public func logTransaction(_ transaction: Transaction) {
+        provider.logTransaction(transaction)
+    }
+    
+    // MARK: Error & Crash Logging
     
     public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:], outputTo log: Logger? = nil) {
         if let log {
@@ -132,5 +126,9 @@ public struct Phoenix: Sendable {
             log.error("\(errorText)")
         }
         provider.logError(error, on: screen, additionalParameters: additionalParameters)
+    }
+    
+    public func logCrash(_ crashDiagnostic: MXCrashDiagnostic) {
+        provider.logCrash(crashDiagnostic)
     }
 }

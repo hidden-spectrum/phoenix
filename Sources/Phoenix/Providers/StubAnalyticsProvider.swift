@@ -3,10 +3,13 @@
 //
 
 import Foundation
+import MetricKit
 import StoreKit
 
 
 public struct StubAnalyticsProvider: AnalyticsProvider {
+    
+    
     
     // MARK: Lifecycle
     
@@ -37,5 +40,11 @@ public struct StubAnalyticsProvider: AnalyticsProvider {
     }
     
     public func logEvent(_ event: AnalyticsEvent, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
+    }
+    
+    public func logError(_ error: any Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
+    }
+    
+    public func logCrash(_ crash: MXCrashDiagnostic) {
     }
 }
