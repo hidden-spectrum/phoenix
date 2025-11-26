@@ -40,5 +40,5 @@ extension AnalyticsParameter {
     static let function = Parameter("function")
     static let lineno = Parameter("lineno")
     static let inApp = Parameter("in_app")
-    static let address = Parameter("address")
+    static let absPath = Parameter("abs_path")
 }

@@ -29,13 +29,14 @@ extension MXCallStackTree {
         while let frame = currentFrame {
             
             let isAppFrame = (frame.binaryName == appBinaryName)
+            let addressString = String(frame.offsetIntoBinaryTextSegment)
             
             let frameDict: AnalyticsParameters = [
                 .filename: frame.binaryName,
-                .function: frame.formattedFunction, // e.g., "testBinaryName + 123"
-                .lineno: 0,                         // We don't have line numbers without dSYMs
+                .function: frame.formattedFunction,
+                .lineno: 0,
                 .inApp: isAppFrame,
-                .address: frame.offsetIntoBinaryTextSegment // Important for manual symbolication
+                .absPath: addressString
             ]
             
             frames.append(frameDict)
