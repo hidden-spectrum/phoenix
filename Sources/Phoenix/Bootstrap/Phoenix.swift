@@ -109,7 +109,7 @@ public struct Phoenix: Sendable {
         provider.unregisterGlobalProperty(property)
     }
     
-    // MARK: Error & Metrics Tracking
+    // MARK: Error & Crash Logging
     
     public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:], outputTo log: Logger? = nil) {
         if let log {
