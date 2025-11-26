@@ -18,7 +18,7 @@ public extension AnalyticsEvent {
 
 extension MXDiagnosticPayload: AnalyticsParametersProvider {
     public var analyticsParameters: AnalyticsParameters {
-        [:]
+        [:] // TODO: Implement
     }
 }
 

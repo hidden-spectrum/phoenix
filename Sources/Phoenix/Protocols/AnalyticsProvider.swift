@@ -23,6 +23,7 @@ public protocol AnalyticsProvider {
     func logTransaction(_ transaction: Transaction)
     
     func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
+    func logCrash(_ crash: MXCrashDiagnostic)
 }
 
 public extension AnalyticsProvider {
@@ -30,12 +31,6 @@ public extension AnalyticsProvider {
         logEvent(.appStoreTransaction(transaction), on: nil, additionalParameters: [:])
     }
     
-    func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
-        let errorParameters: AnalyticsParameters = [
-            .errorDescription: error.localizedDescription,
-            .errorType: String(describing: type(of: error))
-        ]
-        let errorEvent = AnalyticsEvent("error", parameters: errorParameters)
-        logEvent(errorEvent, on: screen, additionalParameters: additionalParameters)
+    func logCrash(_ crash: MXCrashDiagnostic) {
     }
 }

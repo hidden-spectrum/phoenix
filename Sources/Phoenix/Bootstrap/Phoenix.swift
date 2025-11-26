@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import MetricKit
 import OSLog
 import StoreKit
 
@@ -51,6 +52,10 @@ public struct Phoenix: Sendable {
     
     public func logTransaction(_ transaction: Transaction) {
         provider.logTransaction(transaction)
+    }
+    
+    public func logCrash(_ crashDiagnostic: MXCrashDiagnostic) {
+        provider.logCrash(crashDiagnostic)
     }
     
     // MARK: Convenience Methods
