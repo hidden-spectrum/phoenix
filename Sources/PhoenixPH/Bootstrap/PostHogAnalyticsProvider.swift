@@ -28,11 +28,17 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         postHog.setup(config)
     }
     
-    // MARK: AnalyticsProvider
+    // MARK: Provider Lifecycle
     
     public func setup() {
         postHog.reloadFeatureFlags()
     }
+    
+    public func flush() {
+        postHog.flush()
+    }
+    
+    // MARK: User Properties
     
     public func setUserId(_ userId: String?) {
         if let userId {
@@ -57,6 +63,8 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         postHog.identify(userId, userProperties: properties.mappedToPostHogParameters())
     }
     
+    // MARK: Global Properties
+    
     public func registerGlobalProperties(_ properties: AnalyticsParameters) {
         postHog.register(properties.mappedToPostHogParameters())
     }
@@ -64,6 +72,8 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     public func unregisterGlobalProperty(_ property: AnalyticsParameter) {
         postHog.unregister(property.rawValue)
     }
+    
+    // MARK: Events
     
     public func logScreenView(_ screen: AnalyticsScreen, class screenClass: String? = nil, parameters: AnalyticsParameters?) {
         postHog.screen(screen.rawValue, properties: parameters?.mappedToPostHogParameters() ?? [:])
@@ -76,6 +86,8 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             .mappedToPostHogParameters()
         postHog.capture(event.rawValue, properties: finalParameters)
     }
+    
+    // MARK: Error & Crash Logging
     
     public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
         let exception: AnalyticsEvent = .exception(
@@ -112,7 +124,28 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         ])
     }
     
-    public func flush() {
-        postHog.flush()
+    // MARK: Feature Flags & A/B Testing
+    
+    public func reloadFeatureFlags() async {
+        await withCheckedContinuation { continuation in
+            postHog.reloadFeatureFlags {
+                continuation.resume()
+            }
+        }
+    }
+    
+    public func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool {
+        postHog.isFeatureEnabled(feature.rawValue)
+    }
+    
+    public func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant? {
+        guard let rawVariant = postHog.getFeatureFlag(experiment.rawValue) as? String else {
+            return nil
+        }
+        guard let variant = Variant(rawValue: rawVariant) else {
+            assertionFailure("Unknown variant '\(rawVariant)' for experiment '\(experiment.rawValue)'")
+            return nil
+        }
+        return variant
     }
 }

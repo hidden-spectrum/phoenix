@@ -24,11 +24,15 @@ public struct Phoenix: Sendable {
         Phoenix(provider: StubAnalyticsProvider())
     }
     
-    // MARK: Setup
+    // MARK: Provider Lifecycle
     
-    /// Call this in `AppDelegate.didFinishLaunching`
+    /// Call this in `AppDelegate.didFinishLaunching` or in @main `init()`
     public func appDidFinishLaunching() {
         provider.setup()
+    }
+    
+    public func flush() {
+        provider.flush()
     }
     
     // MARK: Basic Logging
@@ -132,9 +136,17 @@ public struct Phoenix: Sendable {
         provider.logCrash(crashDiagnostic)
     }
     
-    // MARK: Cleanup
+    // MARK: Feature Flags & A/B Testing
     
-    public func flush() {
-        provider.flush()
+    public func reloadFeatureFlags() async {
+        await provider.reloadFeatureFlags()
+    }
+    
+    public func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool {
+        provider.featureEnabled(feature)
+    }
+    
+    public func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant? {
+        provider.enabledVariant(for: experiment)
     }
 }

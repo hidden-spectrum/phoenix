@@ -12,16 +12,28 @@ public struct AnalyticsTrackingButton<Label: View>: View {
     @Environment(\.analyticsScreen) private var screen
     @Environment(\.phoenix) private var phoenix
     
-    private let action: () -> Void
-    private let label: () -> Label
     private let name: AnalyticsElementName
+    private let type: AnalyticsElementType
+    private let parameters: AnalyticsParameters
+    
+    private let action: () -> Void
+    private let label: Label
     
     // MARK: Lifecycle
     
-    init(name: AnalyticsElementName, action: @escaping () -> Void, label: @escaping () -> Label) {
+    public init(
+        name: AnalyticsElementName,
+        type: AnalyticsElementType = .button,
+        parameters: AnalyticsParameters = [:],
+        action: @escaping () -> Void,
+        @ViewBuilder label: @escaping () -> Label
+    ) {
         self.name = name
+        self.type = type
+        self.parameters = parameters
+        
         self.action = action
-        self.label = label
+        self.label = label()
     }
     
     // MARK: View
@@ -30,9 +42,9 @@ public struct AnalyticsTrackingButton<Label: View>: View {
         Button(
             action: {
                 action()
-                phoenix.logElementClick(name: name, type: .button, on: screen)
+                phoenix.logElementClick(name: name, type: type, on: screen, parameters: parameters)
             }, label: {
-                label()
+                label
             }
         )
     }

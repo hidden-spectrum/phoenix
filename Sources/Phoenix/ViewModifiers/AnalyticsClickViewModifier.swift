@@ -8,6 +8,8 @@ import SwiftUI
 
 @MainActor
 public extension View {
+    
+    /// - Warning: This can sometimes interfere with other gestures on the view. Use `AnalyticsTrackingButton` instead.
     func analyticsClick(
         name: AnalyticsElementName,
         type: AnalyticsElementType,
@@ -22,7 +24,7 @@ public extension View {
 }
 
 
-struct AnalyticsClickViewModifier: ViewModifier {
+private struct AnalyticsClickViewModifier: ViewModifier {
     
     // MARK: Private
     
@@ -53,7 +55,7 @@ struct AnalyticsClickViewModifier: ViewModifier {
     
     // MARK: ViewModifier
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .simultaneousGesture(
                 TapGesture().onEnded { _ in
