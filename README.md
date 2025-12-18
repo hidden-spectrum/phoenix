@@ -26,7 +26,7 @@ Add Phoenix to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/hidden-spectrum/phoenix.git", from: "1.0.0")
+    .package(url: "https://github.com/hidden-spectrum/phoenix.git", from: "0.1.0")
 ]
 ```
 
@@ -426,22 +426,6 @@ do {
         on: .settings,
         additionalParameters: [.init("operation"): "data_sync"]
     )
-}
-```
-
-### MetricKit Crash Diagnostics
-
-```swift
-class MetricsHandler: MXMetricManagerSubscriber {
-    func didReceive(_ payloads: [MXDiagnosticPayload]) {
-        for payload in payloads {
-            if let crashDiagnostics = payload.crashDiagnostics {
-                for crash in crashDiagnostics {
-                    phoenix.logCrash(crash)
-                }
-            }
-        }
-    }
 }
 ```
 
