@@ -9,6 +9,7 @@ import StoreKit
 
 public protocol AnalyticsProvider {
     func setup()
+    func flush()
     
     func setUserId(_ userId: String?)
     func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?)
@@ -25,17 +26,25 @@ public protocol AnalyticsProvider {
     func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
     func logCrash(_ crash: MXCrashDiagnostic)
     
-    func flush()
+    func reloadFeatureFlags() async
+    func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool
+    func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant?
 }
 
 public extension AnalyticsProvider {
+    func flush() {}
+    
     func logTransaction(_ transaction: Transaction) {
         logEvent(.appStoreTransaction(transaction), on: nil, additionalParameters: [:])
     }
     
-    func logCrash(_ crash: MXCrashDiagnostic) {
-    }
+    func logCrash(_ crash: MXCrashDiagnostic) {}
     
-    func flush() {
+    func reloadFeatureFlags() async {}
+    func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool {
+        false
+    }
+    func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant? {
+        nil
     }
 }
