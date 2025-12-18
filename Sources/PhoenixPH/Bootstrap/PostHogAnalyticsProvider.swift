@@ -142,6 +142,10 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         guard let rawVariant = postHog.getFeatureFlag(experiment.rawValue) as? String else {
             return nil
         }
-        return Variant(rawValue: rawVariant)
+        guard let variant = Variant(rawValue: rawVariant) else {
+            assertionFailure("Unknown variant '\(rawVariant)' for experiment '\(experiment.rawValue)'")
+            return nil
+        }
+        return variant
     }
 }
