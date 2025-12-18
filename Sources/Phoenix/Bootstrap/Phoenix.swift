@@ -136,12 +136,17 @@ public struct Phoenix: Sendable {
         provider.logCrash(crashDiagnostic)
     }
     
-    // MARK: Feature Flags
+    // MARK: Feature Flags & A/B Testing
     
     public func reloadFeatureFlags() async {
         await provider.reloadFeatureFlags()
     }
     
-    // MARK: Cleanup
+    public func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool {
+        provider.featureEnabled(feature)
+    }
     
+    public func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant? {
+        provider.enabledVariant(for: experiment)
+    }
 }
