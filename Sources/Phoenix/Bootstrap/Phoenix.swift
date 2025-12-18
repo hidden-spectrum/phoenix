@@ -131,4 +131,10 @@ public struct Phoenix: Sendable {
     public func logCrash(_ crashDiagnostic: MXCrashDiagnostic) {
         provider.logCrash(crashDiagnostic)
     }
+    
+    // MARK: Cleanup
+    
+    public func flush() {
+        provider.flush()
+    }
 }
