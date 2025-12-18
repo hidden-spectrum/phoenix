@@ -4,7 +4,7 @@ A Swift analytics abstraction library that provides a unified interface for mult
 
 ## Overview
 
-Phoenix abstracts away the complexity of working with different analytics SDKs by providing a single, type-safe API. Switch between providers like PostHog and Firebase Analytics without changing your application code.
+Phoenix abstracts away the complexity of working with different analytics SDKs by providing a single, type-safe API. While originally built around Firebase Analytics, Phoenix currently supports PostHog with additional providers planned for the future.
 
 ## Features
 
@@ -235,9 +235,6 @@ phoenix.setUserProperties([
     .subscriptionTier: "premium",
     .referralSource: "friend"
 ])
-
-// Clear user ID on logout
-phoenix.setUserId(nil)
 ```
 
 ### Global Properties
@@ -274,6 +271,15 @@ phoenix.logElementClick(
     value: 5,
     on: .productDetail
 )
+```
+
+### Flushing Events
+
+Force pending events to be sent immediately:
+
+```swift
+// Flush before app goes to background
+phoenix.flush()
 ```
 
 ## SwiftUI Integration
