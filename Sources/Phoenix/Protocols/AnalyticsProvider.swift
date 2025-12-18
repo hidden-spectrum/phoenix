@@ -24,6 +24,8 @@ public protocol AnalyticsProvider {
     
     func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
     func logCrash(_ crash: MXCrashDiagnostic)
+    
+    func flush()
 }
 
 public extension AnalyticsProvider {
@@ -32,5 +34,8 @@ public extension AnalyticsProvider {
     }
     
     func logCrash(_ crash: MXCrashDiagnostic) {
+    }
+    
+    func flush() {
     }
 }

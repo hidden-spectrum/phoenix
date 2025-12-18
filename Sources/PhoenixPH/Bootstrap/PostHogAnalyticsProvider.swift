@@ -111,4 +111,8 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             .mxCrashVirtualMemoryRegionInfo: crash.virtualMemoryRegionInfo
         ])
     }
+    
+    public func flush() {
+        postHog.flush()
+    }
 }
