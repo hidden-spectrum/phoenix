@@ -4,7 +4,7 @@ A Swift analytics abstraction library that provides a unified interface for mult
 
 ## Overview
 
-Phoenix abstracts away the complexity of working with different analytics SDKs by providing a single, type-safe API. While originally built around Firebase Analytics, Phoenix currently supports PostHog with additional providers planned for the future.
+Phoenix abstracts away the complexity of working with different analytics SDKs by providing a single, type-safe API. While originally built around Firebase Analytics, Phoenix currently supports [PostHog](https://posthog.com) with additional providers planned for the future.
 
 ## Features
 
