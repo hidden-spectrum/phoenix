@@ -429,22 +429,6 @@ do {
 }
 ```
 
-### MetricKit Crash Diagnostics
-
-```swift
-class MetricsHandler: MXMetricManagerSubscriber {
-    func didReceive(_ payloads: [MXDiagnosticPayload]) {
-        for payload in payloads {
-            if let crashDiagnostics = payload.crashDiagnostics {
-                for crash in crashDiagnostics {
-                    phoenix.logCrash(crash)
-                }
-            }
-        }
-    }
-}
-```
-
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
