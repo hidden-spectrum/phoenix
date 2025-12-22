@@ -2,12 +2,14 @@
 //  Copyright © 2025 Hidden Spectrum, LLC. All rights reserved.
 //
 
+import os
 
-public final class UserPropertyCache {
+
+public final class UserPropertyCache: Sendable {
     
     // MARK: Private
     
-    private var cache = AnalyticsParameters()
+    private let state = OSAllocatedUnfairLock(initialState: AnalyticsParameters())
     
     // MARK: Lifecycle
     
@@ -17,21 +19,25 @@ public final class UserPropertyCache {
     // MARK: Updates
     
     public func hasChanges(comparedTo parameters: AnalyticsParameters) -> Bool {
-        let currentValues = getCachedProperties(with: Array(parameters.keys))
-        if currentValues == parameters {
-            return false
-        } else {
-            return true
+        state.withLock { cache in
+            let currentValues = getCachedProperties(from: cache, with: Array(parameters.keys))
+            if currentValues == parameters {
+                return false
+            } else {
+                return true
+            }
         }
     }
     
     public func update(with parameters: AnalyticsParameters) {
-        for (key, value) in parameters {
-            cache[key] = value
+        state.withLock { cache in
+            for (key, value) in parameters {
+                cache[key] = value
+            }
         }
     }
     
-    private func getCachedProperties(with keys: [AnalyticsParameter]) -> AnalyticsParameters {
+    private func getCachedProperties(from cache: AnalyticsParameters, with keys: [AnalyticsParameter]) -> AnalyticsParameters {
         var properties = AnalyticsParameters()
         for key in keys {
             properties[key] = cache[key]

@@ -18,9 +18,6 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     private let postHog = PostHogSDK.shared
     
     private let log = Logger(subsystem: "io.hspec.phoenix", category: "PostHogAnalyticsProvider")
-    private let userPropertyCache = UserPropertyCache()
-    
-    private var cachedPersonProperties = AnalyticsParameters()
     private var userId: String? = nil
     
     // MARK: Lifecycle
@@ -62,16 +59,8 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             log.warning("PostHog userId not set, ignoring set user properties")
             return
         }
-        
-        if !userPropertyCache.hasChanges(comparedTo: properties) {
-            log.debug("No changes to user properties, skipping update")
-            return
-        }
-        
-        let postHogProperites = properties.mappedToPostHogParameters()
-        postHog.identify(userId, userProperties: postHogProperites)
-        
-        userPropertyCache.update(with: properties)
+        let postHogProperties = properties.mappedToPostHogParameters()
+        postHog.identify(userId, userProperties: postHogProperties)
     }
     
     // MARK: Global Properties
