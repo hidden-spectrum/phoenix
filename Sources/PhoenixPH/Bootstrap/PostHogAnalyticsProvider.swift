@@ -70,7 +70,6 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         
         let postHogProperites = properties.mappedToPostHogParameters()
         postHog.identify(userId, userProperties: postHogProperites)
-        log.debug("Sent user properties to PostHog: \(postHogProperites)")
         
         userPropertyCache.update(with: properties)
     }
