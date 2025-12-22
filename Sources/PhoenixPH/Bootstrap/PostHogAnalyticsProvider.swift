@@ -18,7 +18,6 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     private let postHog = PostHogSDK.shared
     
     private let log = Logger(subsystem: "io.hspec.phoenix", category: "PostHogAnalyticsProvider")
-    
     private var userId: String? = nil
     
     // MARK: Lifecycle
@@ -60,7 +59,8 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             log.warning("PostHog userId not set, ignoring set user properties")
             return
         }
-        postHog.identify(userId, userProperties: properties.mappedToPostHogParameters())
+        let postHogProperties = properties.mappedToPostHogParameters()
+        postHog.identify(userId, userProperties: postHogProperties)
     }
     
     // MARK: Global Properties

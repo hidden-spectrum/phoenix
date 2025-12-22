@@ -14,6 +14,9 @@ public struct Phoenix: Sendable {
     
     nonisolated(unsafe) private let provider: AnalyticsProvider
     
+    private let log = Logger(subsystem: "io.hspec.phoenix", category: "Phoenix")
+    private let userPropertyCache = UserPropertyCache()
+    
     // MARK: Lifecycle
     
     public init(provider: AnalyticsProvider) {
@@ -93,11 +96,22 @@ public struct Phoenix: Sendable {
     }
     
     public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
+        let parameters: AnalyticsParameters = [property: value]
+        guard userPropertyCache.hasChanges(comparedTo: parameters) else {
+            log.debug("No changes to user property, skipping setUserProperty update")
+            return
+        }
         provider.setUserProperty(property, to: value)
+        userPropertyCache.update(with: parameters)
     }
     
     public func setUserProperties(_ properties: AnalyticsParameters) {
+        guard userPropertyCache.hasChanges(comparedTo: properties) else {
+            log.debug("No changes to user properties, skipping setUserProperties update")
+            return
+        }
         provider.setUserProperties(properties)
+        userPropertyCache.update(with: properties)
     }
     
     // MARK: Global Properties
