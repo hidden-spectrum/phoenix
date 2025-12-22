@@ -98,6 +98,7 @@ public struct Phoenix: Sendable {
     public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
         let parameters: AnalyticsParameters = [property: value]
         guard userPropertyCache.hasChanges(comparedTo: parameters) else {
+            log.debug("No changes to user property, skipping setUserProperty update")
             return
         }
         provider.setUserProperty(property, to: value)
@@ -106,7 +107,7 @@ public struct Phoenix: Sendable {
     
     public func setUserProperties(_ properties: AnalyticsParameters) {
         guard userPropertyCache.hasChanges(comparedTo: properties) else {
-            log.debug("No changes in user properties, skipping update")
+            log.debug("No changes to user properties, skipping setUserProperties update")
             return
         }
         provider.setUserProperties(properties)
