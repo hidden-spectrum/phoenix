@@ -18,6 +18,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     private let postHog = PostHogSDK.shared
     
     private let log = Logger(subsystem: "io.hspec.phoenix", category: "PostHogAnalyticsProvider")
+    private let userPropertyCache = UserPropertyCache()
     
     private var cachedPersonProperties = AnalyticsParameters()
     private var userId: String? = nil
@@ -62,8 +63,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             return
         }
         
-        let currentCachedProperites = getCachedUserProperties(with: Array(properties.keys))
-        if properties == currentCachedProperites {
+        if !userPropertyCache.hasChanges(comparedTo: properties) {
             log.debug("No changes to user properties, skipping update")
             return
         }
@@ -72,21 +72,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         postHog.identify(userId, userProperties: postHogProperites)
         log.debug("Sent user properties to PostHog: \(postHogProperites)")
         
-        updateCachedUserProperties(with: properties)
-    }
-    
-    private func getCachedUserProperties(with keys: [AnalyticsParameter]) -> AnalyticsParameters {
-        var properties = AnalyticsParameters()
-        for key in keys {
-            properties[key] = cachedPersonProperties[key]
-        }
-        return properties
-    }
-    
-    private func updateCachedUserProperties(with properties: AnalyticsParameters) {
-        for (key, value) in properties {
-            cachedPersonProperties[key] = value
-        }
+        userPropertyCache.update(with: properties)
     }
     
     // MARK: Global Properties

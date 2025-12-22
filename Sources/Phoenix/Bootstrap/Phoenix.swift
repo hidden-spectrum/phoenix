@@ -14,8 +14,6 @@ public struct Phoenix: Sendable {
     
     nonisolated(unsafe) private let provider: AnalyticsProvider
     
-    private var cachedPersonProperties = AnalyticsParameters()
-    
     // MARK: Lifecycle
     
     public init(provider: AnalyticsProvider) {
