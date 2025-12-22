@@ -96,7 +96,12 @@ public struct Phoenix: Sendable {
     }
     
     public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
-        setUserProperties([property: value])
+        let parameters: AnalyticsParameters = [property: value]
+        guard userPropertyCache.hasChanges(comparedTo: parameters) else {
+            return
+        }
+        provider.setUserProperty(property, to: value)
+        userPropertyCache.update(with: parameters)
     }
     
     public func setUserProperties(_ properties: AnalyticsParameters) {
