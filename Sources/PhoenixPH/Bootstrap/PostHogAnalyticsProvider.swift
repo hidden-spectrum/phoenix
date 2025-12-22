@@ -19,6 +19,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     private let log = Logger(subsystem: "io.hspec.phoenix", category: "PostHogAnalyticsProvider")
     
+    private var cachedPersonProperties = AnalyticsParameters()
     private var userId: String? = nil
     
     // MARK: Lifecycle
@@ -60,7 +61,32 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             log.warning("PostHog userId not set, ignoring set user properties")
             return
         }
-        postHog.identify(userId, userProperties: properties.mappedToPostHogParameters())
+        
+        let currentCachedProperites = getCachedUserProperties(with: Array(properties.keys))
+        if properties == currentCachedProperites {
+            log.debug("No changes to user properties, skipping update")
+            return
+        }
+        
+        let postHogProperites = properties.mappedToPostHogParameters()
+        postHog.identify(userId, userProperties: postHogProperites)
+        log.debug("Sent user properties to PostHog: \(postHogProperites)")
+        
+        updateCachedUserProperties(with: properties)
+    }
+    
+    private func getCachedUserProperties(with keys: [AnalyticsParameter]) -> AnalyticsParameters {
+        var properties = AnalyticsParameters()
+        for key in keys {
+            properties[key] = cachedPersonProperties[key]
+        }
+        return properties
+    }
+    
+    private func updateCachedUserProperties(with properties: AnalyticsParameters) {
+        for (key, value) in properties {
+            cachedPersonProperties[key] = value
+        }
     }
     
     // MARK: Global Properties
