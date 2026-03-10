@@ -134,7 +134,7 @@ public struct Phoenix: Sendable {
     
     public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:], outputTo log: Logger? = nil) {
         if let log {
-            var errorText = error.localizedDescription
+            var errorText = String(reflecting: error)
             if let screen {
                 errorText += "\nAnalyticsScreen: \(screen.rawValue)"
             }
