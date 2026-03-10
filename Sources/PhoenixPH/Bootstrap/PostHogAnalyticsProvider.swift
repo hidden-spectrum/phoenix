@@ -94,11 +94,14 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
             type: String(describing: type(of: error)),
             value: error.localizedDescription
         )
-                                                  
+        let parameters = additionalParameters.combining(with: [
+            .debugValue: String(reflecting: error)
+        ])
+        
         logEvent(
             exception,
             on: screen,
-            additionalParameters: additionalParameters
+            additionalParameters: parameters
         )
     }
     
