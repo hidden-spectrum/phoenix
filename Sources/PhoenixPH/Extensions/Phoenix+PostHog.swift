@@ -34,6 +34,7 @@ extension AnalyticsParameter {
     static let exceptionList = Parameter("$exception_list")
     static let type = Parameter("type")
     static let value = Parameter("value")
+    static let debugValue = Parameter("debug_value")
     
     static let stacktrace = Parameter("stacktrace")
     static let frames = Parameter("frames")
