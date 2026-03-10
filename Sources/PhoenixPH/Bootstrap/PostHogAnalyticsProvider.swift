@@ -90,41 +90,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     // MARK: Error & Crash Logging
     
     public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
-        let exception: AnalyticsEvent = .exception(
-            type: String(describing: type(of: error)),
-            value: error.localizedDescription
-        )
-        let parameters = additionalParameters.combining(with: [
-            .debugValue: String(reflecting: error)
-        ])
-        
-        logEvent(
-            exception,
-            on: screen,
-            additionalParameters: parameters
-        )
-    }
-    
-    public func logCrash(_ crash: MXCrashDiagnostic) {
-        let exceptionType = crash.exceptionType?.intValue ?? 0
-        let exceptionCode = crash.exceptionCode?.intValue ?? 0
-        let signal = crash.signal?.intValue ?? 0
-        let terminationReason = crash.terminationReason ?? "Unknown Termination"
-        
-        let errorType = "Signal \(signal)"
-        let errorValue = "Termination: \(terminationReason) (Code: \(exceptionCode), Type: \(exceptionType))"
-        
-        let exception: AnalyticsEvent = .exception(
-            type: errorType,
-            value: errorValue,
-            mechanismType: "MetricKit",
-            handled: false,
-            stackTraceFrames: crash.callStackTree.toPostHogFrames()
-        )
-        
-        logEvent(exception, on: nil, additionalParameters: [
-            .mxCrashVirtualMemoryRegionInfo: crash.virtualMemoryRegionInfo
-        ])
+        logEvent(.error(error), on: screen, additionalParameters: additionalParameters)
     }
     
     // MARK: Feature Flags & A/B Testing
