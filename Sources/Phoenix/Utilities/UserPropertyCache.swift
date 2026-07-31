@@ -18,20 +18,6 @@ public final class UserPropertyCache: Sendable {
     
     // MARK: Updates
 
-    public func snapshot() -> AnalyticsParameters {
-        state.withLock { cache in
-            cache
-        }
-    }
-
-    private func snapshot(from cache: AnalyticsParameters, with keys: [AnalyticsParameter]) -> AnalyticsParameters {
-        var properties = AnalyticsParameters()
-        for key in keys {
-            properties[key] = cache[key]
-        }
-        return properties
-    }
-    
     public func hasChanges(comparedTo parameters: AnalyticsParameters) -> Bool {
         state.withLock { cache in
             let currentValues = snapshot(from: cache, with: Array(parameters.keys))
@@ -49,6 +35,20 @@ public final class UserPropertyCache: Sendable {
                 cache[key] = value
             }
         }
+    }
+
+    public func snapshot() -> AnalyticsParameters {
+        state.withLock { cache in
+            cache
+        }
+    }
+
+    private func snapshot(from cache: AnalyticsParameters, with keys: [AnalyticsParameter]) -> AnalyticsParameters {
+        var properties = AnalyticsParameters()
+        for key in keys {
+            properties[key] = cache[key]
+        }
+        return properties
     }
     
 }
