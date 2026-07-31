@@ -92,7 +92,7 @@ public struct Phoenix: Sendable {
     // MARK: User Properties
     
     public func setUserId(_ userId: String?) {
-        provider.setUserId(userId)
+        provider.setUserId(userId, userProperties: userPropertyCache.snapshot())
     }
     
     public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {

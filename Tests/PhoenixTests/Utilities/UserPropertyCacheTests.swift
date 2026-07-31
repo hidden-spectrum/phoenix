@@ -19,6 +19,25 @@ struct UserPropertyCacheTests {
         #expect(cache.hasChanges(comparedTo: parameters) == true)
     }
 
+    // MARK: - Snapshot Tests
+
+    @Test("snapshot returns all cached properties")
+    func testSnapshotReturnsAllCachedProperties() {
+        let cache = UserPropertyCache()
+        let parameters: AnalyticsParameters = [
+            .contentId: 1234,
+            .contentType: "article"
+        ]
+        cache.update(with: parameters)
+        #expect(cache.snapshot() == parameters)
+    }
+
+    @Test("snapshot returns empty parameters when cache is empty")
+    func testSnapshotReturnsEmptyParametersWhenCacheIsEmpty() {
+        let cache = UserPropertyCache()
+        #expect(cache.snapshot().isEmpty)
+    }
+
     // MARK: - hasChanges Tests
 
     @Test("hasChanges returns true when cache is empty")

@@ -19,7 +19,6 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     private let log = Logger(subsystem: "io.hspec.phoenix", category: "PostHogAnalyticsProvider")
     private var userId: String? = nil
-    private var cachedUserProperties: AnalyticsParameters = [:]
     
     // MARK: Lifecycle
     
@@ -41,15 +40,20 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     // MARK: User Properties
     
     public func setUserId(_ userId: String?) {
-        if let userId {
-            if cachedUserProperties.isEmpty {
-                postHog.identify(userId)
-            } else {
-                let postHogProperties = cachedUserProperties.mappedToPostHogParameters()
-                postHog.identify(userId, userProperties: postHogProperties)
-            }
-            self.userId = postHog.getDistinctId()
+        setUserId(userId, userProperties: [:])
+    }
+
+    public func setUserId(_ userId: String?, userProperties: AnalyticsParameters) {
+        guard let userId else {
+            return
         }
+        let postHogProperties = userProperties.mappedToPostHogParameters()
+        if postHogProperties.isEmpty {
+            postHog.identify(userId)
+        } else {
+            postHog.identify(userId, userProperties: postHogProperties)
+        }
+        self.userId = postHog.getDistinctId()
     }
     
     public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
@@ -62,8 +66,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     public func setUserProperties(_ properties: AnalyticsParameters) {
         guard let userId else {
-            cachedUserProperties.combine(with: properties)
-            log.warning("PostHog userId not set, caching user properties")
+            log.warning("PostHog userId not set, ignoring set user properties")
             return
         }
         let postHogProperties = properties.mappedToPostHogParameters()

@@ -12,6 +12,7 @@ public protocol AnalyticsProvider {
     func flush()
     
     func setUserId(_ userId: String?)
+    func setUserId(_ userId: String?, userProperties: AnalyticsParameters)
     func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?)
     func setUserProperties(_ properties: AnalyticsParameters)
     
@@ -33,6 +34,10 @@ public protocol AnalyticsProvider {
 
 public extension AnalyticsProvider {
     func flush() {}
+
+    func setUserId(_ userId: String?, userProperties: AnalyticsParameters) {
+        setUserId(userId)
+    }
     
     func logTransaction(_ transaction: Transaction) {
         logEvent(.appStoreTransaction(transaction), on: nil, additionalParameters: [:])
