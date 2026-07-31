@@ -31,6 +31,11 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     public func setUserId(_ userId: String?) {
         self.userId = userId
     }
+
+    public func setUserId(_ userId: String?, userProperties: AnalyticsParameters) {
+        self.userId = userId
+        setUserProperties(userProperties)
+    }
     
     public func setUserProperty(_ property: AnalyticsParameter, to value: AnalyticsParameterValue?) {
         userPropertiesSet[property] = value
