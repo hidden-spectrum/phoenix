@@ -19,6 +19,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     private let log = Logger(subsystem: "io.hspec.phoenix", category: "PostHogAnalyticsProvider")
     private var userId: String? = nil
+    private var cachedUserProperties: AnalyticsParameters = [:]
     
     // MARK: Lifecycle
     
@@ -41,7 +42,12 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     public func setUserId(_ userId: String?) {
         if let userId {
-            postHog.identify(userId)
+            if cachedUserProperties.isEmpty {
+                postHog.identify(userId)
+            } else {
+                let postHogProperties = cachedUserProperties.mappedToPostHogParameters()
+                postHog.identify(userId, userProperties: postHogProperties)
+            }
             self.userId = postHog.getDistinctId()
         }
     }
@@ -56,7 +62,8 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     public func setUserProperties(_ properties: AnalyticsParameters) {
         guard let userId else {
-            log.warning("PostHog userId not set, ignoring set user properties")
+            cachedUserProperties.combine(with: properties)
+            log.warning("PostHog userId not set, caching user properties")
             return
         }
         let postHogProperties = properties.mappedToPostHogParameters()
