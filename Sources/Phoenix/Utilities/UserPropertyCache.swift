@@ -50,5 +50,4 @@ public final class UserPropertyCache: Sendable {
         }
         return properties
     }
-    
 }
