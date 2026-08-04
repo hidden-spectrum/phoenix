@@ -28,31 +28,6 @@ extension AnalyticsEvent {
     
     // MARK: Standard
     
-    package static func error(_ error: Error) -> Event {
-        var parameters: AnalyticsParameters
-        
-        if type(of: error) is NSError.Type {
-            let nsError = error as NSError
-            
-            parameters = [
-                .errorType: nsError.domain,
-                .errorValue: String(nsError.code),
-            ]
-            
-            if let underlyingNSError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError {
-                parameters[.errorUnderlyingType] = underlyingNSError.domain
-                parameters[.errorUnderlyingValue] = String(underlyingNSError.code)
-            }
-        } else {
-            parameters = [
-                .errorType: String(reflecting: type(of: error)),
-                .errorValue: String(reflecting: error),
-            ]
-        }
-        
-        return Event("error", parameters: parameters)
-    }
-    
     static func elementClick(name: AnalyticsElementName, type: AnalyticsElementType, value: AnalyticsParameterValue?) -> Self {
         elementAction("element_click", name: name, type: type, value: value)
     }

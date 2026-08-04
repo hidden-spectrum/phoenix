@@ -99,8 +99,11 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     // MARK: Error & Crash Logging
     
-    public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
-        logEvent(.error(error), on: screen, additionalParameters: additionalParameters)
+    public func log(_ level: AnalyticsLogLevel, message: String, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
+        let attributes = additionalParameters
+            .combining(with: [.screenName: screen?.rawValue])
+            .mappedToPostHogParameters()
+        postHog.captureLog(message, level: level.postHogLevel, attributes: attributes)
     }
     
     // MARK: Feature Flags & A/B Testing

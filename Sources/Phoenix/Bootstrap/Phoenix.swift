@@ -4,7 +4,6 @@
 
 import Foundation
 import MetricKit
-import OSLog
 import StoreKit
 
 
@@ -132,18 +131,15 @@ public struct Phoenix: Sendable {
     
     // MARK: Error & Crash Logging
     
-    public func logError(_ error: Error, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:], outputTo log: Logger? = nil) {
-        if let log {
-            var errorText = String(reflecting: error)
-            if let screen {
-                errorText += "\nAnalyticsScreen: \(screen.rawValue)"
-            }
-            if !additionalParameters.isEmpty {
-                errorText += "\nAdditional Params: \(additionalParameters)"
-            }
-            log.error("\(errorText)")
-        }
-        provider.logError(error, on: screen, additionalParameters: additionalParameters)
+    public func log(_ level: AnalyticsLogLevel, _ message: String, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
+        provider.log(level, message: message, on: screen, additionalParameters: additionalParameters)
+    }
+    
+    public func log(_ error: Error, _ message: String, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
+        let errorParameters = AnalyticsErrorParameters(for: error)
+        let parameters = errorParameters.parameters
+            .combining(with: additionalParameters)
+        provider.log(.error, message: message, on: screen, additionalParameters: parameters)
     }
     
     public func logCrash(_ crashDiagnostic: MXCrashDiagnostic) {
