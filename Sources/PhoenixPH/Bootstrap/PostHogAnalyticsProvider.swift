@@ -66,7 +66,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     public func setUserProperties(_ properties: AnalyticsParameters) {
         guard let userId else {
-            log.warning("PostHog userId not set, ignoring set user properties")
+            log.warning("PostHog userId not set, user properties will be replayed on setUserId")
             return
         }
         let postHogProperties = properties.mappedToPostHogParameters()
