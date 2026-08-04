@@ -3,21 +3,24 @@
 //
 
 import Phoenix
+import PostHog
 
 
-extension AnalyticsEvent {
-    
-    static func error(_ error: Error) -> Event {
-        let parameters: AnalyticsParameters = [
-            .errorType: String(reflecting: type(of: error)),
-            .errorValue: String(reflecting: error),
-        ]
-        
-        return Event("error", parameters: parameters)
+extension AnalyticsLogLevel {
+    var postHogLevel: PostHogLogSeverity {
+        switch self {
+        case .trace: .trace
+        case .debug: .debug
+        case .info: .info
+        case .warning: .warn
+        case .error: .error
+        case .fatal: .fatal
+        }
     }
 }
 
 
 extension AnalyticsParameter {
+    static let logScreenName = Parameter("screen.name")
     static let screenName = Parameter("$screen_name")
 }

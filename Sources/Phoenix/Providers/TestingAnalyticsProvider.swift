@@ -13,7 +13,7 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     var trackedEvents = [EventLog]()
     var trackedScreenViews = [ScreenViewLog]()
     var trackedTransactions = [Transaction]()
-    var trackedErrors = [ErrorLog]()
+    var trackedLogs = [Log]()
     var userId: String?
     var userPropertiesSet = [AnalyticsParameter: AnalyticsParameterValue?]()
     
@@ -26,7 +26,6 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     
     public func setup() {
     }
-    
     
     public func setUserId(_ userId: String?) {
         self.userId = userId
@@ -69,9 +68,9 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
         trackedTransactions.append(transaction)
     }
     
-    public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
-        trackedErrors.append(
-            ErrorLog(error: error, screen: screen, additionalParameters: additionalParameters)
+    public func log(_ level: AnalyticsLogLevel, message: String, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
+        trackedLogs.append(
+            Log(level: level, message: message, screen: screen, additionalParameters: additionalParameters)
         )
     }
     
@@ -80,7 +79,7 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     public func removeAllTrackedInfo() {
         trackedEvents.removeAll()
         trackedScreenViews.removeAll()
-        trackedErrors.removeAll()
+        trackedLogs.removeAll()
         userPropertiesSet.removeAll()
     }
     
@@ -103,7 +102,13 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     }
     
     public func wasErrorTracked(_ errorType: String) -> Bool {
-        return trackedErrors.first(where: { String(describing: type(of: $0.error)) == errorType }) != nil
+        return trackedLogs.contains { log in
+            guard case .error = log.level,
+                  case let .some(.some(value)) = log.additionalParameters[.errorType] else {
+                return false
+            }
+            return value.analyticsSupportedValue as? String == errorType
+        }
     }
 }
 
@@ -131,9 +136,10 @@ extension TestingAnalyticsProvider {
         }
     }
     
-    struct ErrorLog: Sendable {
-        let error: Error
+    struct Log: Sendable {
+        let level: AnalyticsLogLevel
+        let message: String
         let screen: AnalyticsScreen?
-        let additionalParameters: AnalyticsParameters?
+        let additionalParameters: AnalyticsParameters
     }
 }

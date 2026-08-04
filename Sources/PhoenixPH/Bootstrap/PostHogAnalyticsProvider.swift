@@ -66,7 +66,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     public func setUserProperties(_ properties: AnalyticsParameters) {
         guard let userId else {
-            log.warning("PostHog userId not set, ignoring set user properties")
+            log.warning("PostHog userId not set, user properties will be replayed on setUserId")
             return
         }
         let postHogProperties = properties.mappedToPostHogParameters()
@@ -99,8 +99,11 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     // MARK: Error & Crash Logging
     
-    public func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
-        logEvent(.error(error), on: screen, additionalParameters: additionalParameters)
+    public func log(_ level: AnalyticsLogLevel, message: String, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
+        let attributes = additionalParameters
+            .combining(with: [.logScreenName: screen?.rawValue])
+            .mappedToPostHogParameters()
+        postHog.captureLog(message, level: level.postHogLevel, attributes: attributes)
     }
     
     // MARK: Feature Flags & A/B Testing

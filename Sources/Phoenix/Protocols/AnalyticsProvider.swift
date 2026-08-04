@@ -24,7 +24,7 @@ public protocol AnalyticsProvider {
     
     func logTransaction(_ transaction: Transaction)
     
-    func logError(_ error: Error, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
+    func log(_ level: AnalyticsLogLevel, message: String, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters)
     func logCrash(_ crash: MXCrashDiagnostic)
     
     func reloadFeatureFlags() async
