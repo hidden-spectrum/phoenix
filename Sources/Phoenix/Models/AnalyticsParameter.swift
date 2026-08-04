@@ -75,6 +75,8 @@ public extension AnalyticsParameter {
     
     // MARK: Error Tracking
     
-    static let errorValue           = Parameter("error_value")
     static let errorType            = Parameter("error_type")
+    static let errorValue           = Parameter("error_value")
+    static let errorUnderlyingType  = Parameter("error_underlying_type")
+    static let errorUnderlyingValue = Parameter("error_underlying_value")
 }
