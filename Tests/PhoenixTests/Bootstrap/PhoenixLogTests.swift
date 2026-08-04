@@ -14,6 +14,14 @@ struct PhoenixLogTests {
         case failure
     }
     
+    private enum LoggableError: AnalyticsLoggableError {
+        case failure
+        
+        var analyticsLogMessage: String {
+            "Loggable failure"
+        }
+    }
+    
     private let phoenix: Phoenix
     private let provider: TestingAnalyticsProvider
     private let screen = AnalyticsScreen("test_screen")
@@ -58,6 +66,26 @@ struct PhoenixLogTests {
         }
         #expect(provider.trackedLogs.count == 1)
         #expect(log.message == "Test failure")
+        #expect(log.screen == screen)
+        #expect(log.additionalParameters == expectedParameters)
+    }
+    
+    @Test("AnalyticsLoggableError uses its analytics log message")
+    func loggableError() throws {
+        let error = LoggableError.failure
+        phoenix.log(error, on: screen)
+        let expectedParameters: AnalyticsParameters = [
+            .errorType: String(reflecting: type(of: error)),
+            .errorValue: String(reflecting: error),
+        ]
+        
+        let log = try #require(provider.trackedLogs.first)
+        guard case .error = log.level else {
+            Issue.record("Expected error log level")
+            return
+        }
+        #expect(provider.trackedLogs.count == 1)
+        #expect(log.message == "Loggable failure")
         #expect(log.screen == screen)
         #expect(log.additionalParameters == expectedParameters)
     }

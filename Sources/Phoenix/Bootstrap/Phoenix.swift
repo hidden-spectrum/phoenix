@@ -135,6 +135,10 @@ public struct Phoenix: Sendable {
         provider.log(level, message: message, on: screen, additionalParameters: additionalParameters)
     }
     
+    public func log<E: AnalyticsLoggableError>(_ error: E, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
+        log(error, error.analyticsLogMessage, on: screen, additionalParameters: additionalParameters)
+    }
+    
     public func log(_ error: Error, _ message: String, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
         let errorParameters = AnalyticsErrorParameters(for: error)
         let parameters = errorParameters.parameters
