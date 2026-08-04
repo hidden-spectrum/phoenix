@@ -101,7 +101,7 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
     
     public func log(_ level: AnalyticsLogLevel, message: String, on screen: AnalyticsScreen?, additionalParameters: AnalyticsParameters) {
         let attributes = additionalParameters
-            .combining(with: [.screenName: screen?.rawValue])
+            .combining(with: [.logScreenName: screen?.rawValue])
             .mappedToPostHogParameters()
         postHog.captureLog(message, level: level.postHogLevel, attributes: attributes)
     }

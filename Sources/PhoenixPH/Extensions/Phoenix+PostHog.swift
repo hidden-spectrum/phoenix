@@ -21,5 +21,6 @@ extension AnalyticsLogLevel {
 
 
 extension AnalyticsParameter {
+    static let logScreenName = Parameter("screen.name")
     static let screenName = Parameter("$screen_name")
 }
