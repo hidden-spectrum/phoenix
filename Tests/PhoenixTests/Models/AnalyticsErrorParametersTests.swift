@@ -24,7 +24,7 @@ struct AnalyticsErrorParametersTests {
             .errorValue: String(reflecting: error),
         ]
         
-        #expect(errorParameters.parameters == expectedParameters)
+        #expect(errorParameters.analyticsParameters == expectedParameters)
     }
     
     @Test("NSError uses domain and code for itself and its underlying error")
@@ -43,6 +43,6 @@ struct AnalyticsErrorParametersTests {
             .errorUnderlyingValue: String(NSURLErrorNetworkConnectionLost),
         ]
         
-        #expect(errorParameters.parameters == expectedParameters)
+        #expect(errorParameters.analyticsParameters == expectedParameters)
     }
 }
