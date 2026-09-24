@@ -131,8 +131,32 @@ public struct Phoenix: Sendable {
     
     // MARK: Error & Crash Logging
     
-    public func log(_ level: AnalyticsLogLevel, _ message: String, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
-        provider.log(level, message: message, on: screen, additionalParameters: additionalParameters)
+    public func log(
+        _ level: AnalyticsLogLevel,
+        _ message: String,
+        on screen: AnalyticsScreen? = nil,
+        object: AnalyticsParametersProvider? = nil,
+        additionalParameters: AnalyticsParameters = [:]
+    ) {
+        let allParameters = (object?.analyticsParameters ?? [:])
+            .combining(with: additionalParameters)
+        provider.log(level, message: message, on: screen, additionalParameters: allParameters)
+    }
+    
+    public func log(
+        _ level: AnalyticsLogLevel,
+        _ message: String,
+        on screen: AnalyticsScreen? = nil,
+        error: Error,
+        additionalParameters: AnalyticsParameters = [:]
+    ) {
+        log(
+            level,
+            message,
+            on: screen,
+            object: AnalyticsErrorParameters(for: error),
+            additionalParameters: additionalParameters
+        )
     }
     
     public func log<E: AnalyticsLoggableError>(_ error: E, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
@@ -140,10 +164,7 @@ public struct Phoenix: Sendable {
     }
     
     public func log(_ error: Error, _ message: String, on screen: AnalyticsScreen? = nil, additionalParameters: AnalyticsParameters = [:]) {
-        let errorParameters = AnalyticsErrorParameters(for: error)
-        let parameters = errorParameters.parameters
-            .combining(with: additionalParameters)
-        provider.log(.error, message: message, on: screen, additionalParameters: parameters)
+        log(.error, message, on: screen, error: error, additionalParameters: additionalParameters)
     }
     
     public func logCrash(_ crashDiagnostic: MXCrashDiagnostic) {

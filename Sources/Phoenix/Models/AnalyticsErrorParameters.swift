@@ -5,11 +5,11 @@
 import Foundation
 
 
-struct AnalyticsErrorParameters {
+struct AnalyticsErrorParameters: AnalyticsParametersProvider {
     
     // MARK: Internal
     
-    let parameters: AnalyticsParameters
+    let analyticsParameters: AnalyticsParameters
     
     // MARK: Lifecycle
     
@@ -27,11 +27,11 @@ struct AnalyticsErrorParameters {
                 parameters[.errorUnderlyingValue] = String(underlyingNSError.code)
             }
             
-            self.parameters = parameters
+            self.analyticsParameters = parameters
         } else {
             let value = String(reflecting: error)
             
-            parameters = [
+            analyticsParameters = [
                 .errorType: String(reflecting: type(of: error)),
                 .errorValue: value,
             ]
