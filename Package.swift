@@ -30,5 +30,11 @@ let package = Package(
                 "Phoenix",
             ]
         ),
+        .testTarget(
+            name: "PhoenixPHTests",
+            dependencies: [
+                "PhoenixPH",
+            ]
+        ),
     ]
 )
