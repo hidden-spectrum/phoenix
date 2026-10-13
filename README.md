@@ -168,12 +168,58 @@ extension AnalyticsElementName {
 ### Feature Flags
 
 ```swift
-extension AnalyticsFeatureFlag {
+extension AnalyticsFeatureFlag where Value == Bool {
     static let newCheckoutFlow = Feature("new_checkout_flow")
     static let darkModeEnabled = Feature("dark_mode_enabled")
     static let premiumFeatures = Feature("premium_features")
 }
 ```
+
+### Feature Flag Payloads
+
+Declare the payload type on the flag so callers cannot choose a different return type:
+
+```swift
+struct CheckoutConfig: Decodable, Sendable {
+    let title: String
+    let maximumItems: Int
+}
+
+extension AnalyticsFeatureFlag where Value == CheckoutConfig {
+    static let checkoutConfig = Feature("checkout_config")
+}
+
+let config = phoenix.featureFlagValue(.checkoutConfig) // CheckoutConfig?
+let title = config?.title ?? "Checkout"
+```
+
+`AnalyticsFeatureFlag<Value>` requires only `Sendable`. The base
+`featureFlagValue` overload casts the provider payload directly to `Value`.
+An explicit `Value: Decodable` overload decodes JSON objects, arrays, and scalar
+values such as `String`, `Int`, and `Bool`. A payload containing only `123` can
+therefore be read with `AnalyticsFeatureFlag<Int>("item_limit")`.
+Missing or mismatched payloads return `nil`. Providers without payload support
+also return `nil`.
+
+Generic wrappers must retain the `Decodable` constraint to select the decoding
+overload; overload selection uses the constraints known at the call site.
+
+`featureFlagValue` reads the payload independently of the enabled state. Use
+`featureEnabled(.checkoutConfig)` when the configuration should only apply to
+enabled flags. `featureFlagValue` on a `Bool` flag reads its boolean payload, not
+its enabled state. Call `reloadFeatureFlags()` before reading when you need to
+wait for a refresh.
+
+When migrating existing boolean flags, add `where Value == Bool` to their
+`AnalyticsFeatureFlag` extensions and use `AnalyticsFeatureFlag<Bool>` for explicit
+type annotations and standalone initializers. Custom providers must make their
+`featureEnabled` method generic: `func featureEnabled<Value>(_ feature:
+AnalyticsFeatureFlag<Value>) -> Bool`.
+Providers that support payloads should implement both `featureFlagValue`
+overloads, including the one constrained to `Value: Decodable`.
+
+Tests can supply payloads using
+`TestingAnalyticsProvider.setFeatureFlagValue(_:for:)`.
 
 ### Experiments
 

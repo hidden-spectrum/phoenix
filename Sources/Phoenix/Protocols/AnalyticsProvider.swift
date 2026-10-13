@@ -28,7 +28,9 @@ public protocol AnalyticsProvider {
     func logCrash(_ crash: MXCrashDiagnostic)
     
     func reloadFeatureFlags() async
-    func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool
+    func featureEnabled<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Bool
+    func featureFlagValue<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Value?
+    func featureFlagValue<Value: Decodable>(_ feature: AnalyticsFeatureFlag<Value>) -> Value?
     func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant?
 }
 
@@ -46,6 +48,8 @@ public extension AnalyticsProvider {
     func logCrash(_ crash: MXCrashDiagnostic) {}
     
     func reloadFeatureFlags() async {}
-    func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool { false }
+    func featureEnabled<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Bool { false }
+    func featureFlagValue<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Value? { nil }
+    func featureFlagValue<Value: Decodable>(_ feature: AnalyticsFeatureFlag<Value>) -> Value? { nil }
     func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant? { nil }
 }

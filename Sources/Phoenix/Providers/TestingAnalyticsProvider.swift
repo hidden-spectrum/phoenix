@@ -16,6 +16,10 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
     var trackedLogs = [Log]()
     var userId: String?
     var userPropertiesSet = [AnalyticsParameter: AnalyticsParameterValue?]()
+
+    // MARK: Private
+
+    private var featureFlagValues = [String: any Sendable]()
     
     // MARK: Lifecycle
     
@@ -74,6 +78,21 @@ public final class TestingAnalyticsProvider: AnalyticsProvider {
         )
     }
     
+    // MARK: Feature Flags
+
+    public func featureFlagValue<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Value? {
+        featureFlagValues[feature.rawValue] as? Value
+    }
+
+    public func featureFlagValue<Value: Decodable>(_ feature: AnalyticsFeatureFlag<Value>) -> Value? {
+        featureFlagValues[feature.rawValue] as? Value
+    }
+
+    /// Supplies a typed payload for tests. Pass `nil` to remove it.
+    public func setFeatureFlagValue<Value>(_ value: Value?, for feature: AnalyticsFeatureFlag<Value>) {
+        featureFlagValues[feature.rawValue] = value
+    }
+
     // MARK: XCTest
     
     public func removeAllTrackedInfo() {

@@ -116,8 +116,16 @@ public final class PostHogAnalyticsProvider: AnalyticsProvider {
         }
     }
     
-    public func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool {
+    public func featureEnabled<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Bool {
         postHog.isFeatureEnabled(feature.rawValue)
+    }
+
+    public func featureFlagValue<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Value? {
+        postHog.getFeatureFlagResult(feature.rawValue)?.payload as? Value
+    }
+
+    public func featureFlagValue<Value: Decodable>(_ feature: AnalyticsFeatureFlag<Value>) -> Value? {
+        feature.decodePayload(postHog.getFeatureFlagResult(feature.rawValue)?.payload)
     }
     
     public func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant? {

@@ -5,9 +5,10 @@
 import Foundation
 
 
-public struct AnalyticsFeatureFlag: Sendable {
+/// A feature flag whose remote payload has type `Value`.
+public struct AnalyticsFeatureFlag<Value: Sendable>: Sendable {
     
-    // MARK: Publict
+    // MARK: Public
     
     public typealias Feature = Self
     

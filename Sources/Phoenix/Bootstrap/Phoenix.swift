@@ -177,8 +177,20 @@ public struct Phoenix: Sendable {
         await provider.reloadFeatureFlags()
     }
     
-    public func featureEnabled(_ feature: AnalyticsFeatureFlag) -> Bool {
+    public func featureEnabled<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Bool {
         provider.featureEnabled(feature)
+    }
+
+    /// Returns the flag's remote payload cast to `Value`, or `nil` when unavailable or mismatched.
+    /// This reads the payload independently of the flag's enabled state.
+    public func featureFlagValue<Value>(_ feature: AnalyticsFeatureFlag<Value>) -> Value? {
+        provider.featureFlagValue(feature)
+    }
+
+    /// Decodes the flag's remote JSON payload, or returns `nil` when unavailable or invalid.
+    /// This reads the payload independently of the flag's enabled state.
+    public func featureFlagValue<Value: Decodable>(_ feature: AnalyticsFeatureFlag<Value>) -> Value? {
+        provider.featureFlagValue(feature)
     }
     
     public func enabledVariant<Variant: AnalyticsExperimentVariant>(for experiment: AnalyticsExperiment<Variant>) -> Variant? {
