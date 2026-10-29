@@ -5,7 +5,7 @@
 import Foundation
 
 
-public struct AnalyticsPresentationContext: Sendable {
+public struct AnalyticsPresentationContext: Equatable, Sendable {
     
     // MARK: Public
     
