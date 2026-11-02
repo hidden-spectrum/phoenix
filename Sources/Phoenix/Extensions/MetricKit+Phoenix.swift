@@ -24,7 +24,13 @@ extension MXDiagnosticPayload: AnalyticsParametersProvider {
 
 extension MXMetricPayload: AnalyticsParametersProvider {
     public var analyticsParameters: AnalyticsParameters {
-        var parameters = AnalyticsParameters()
+        var parameters: AnalyticsParameters = [
+            .mxPeriodStart: timeStampBegin,
+            .mxPeriodEnd: timeStampEnd,
+            .mxLatestAppVersion: latestApplicationVersion,
+            .mxIncludesMultipleAppVersions: includesMultipleApplicationVersions,
+            .mxAppBuildVersion: metaData?.applicationBuildVersion
+        ]
         if let foregroundExits = applicationExitMetrics?.foregroundExitData {
             parameters.combine(with: [
                 .mxFGNormalAppExitCount: foregroundExits.cumulativeNormalAppExitCount,
@@ -58,6 +64,14 @@ extension MXMetricPayload: AnalyticsParametersProvider {
 
 
 public extension AnalyticsParameter {
+    
+    // Reporting Period
+    
+    static let mxPeriodStart = Parameter("mx_period_start")
+    static let mxPeriodEnd = Parameter("mx_period_end")
+    static let mxLatestAppVersion = Parameter("mx_latest_app_version")
+    static let mxIncludesMultipleAppVersions = Parameter("mx_includes_multiple_app_versions")
+    static let mxAppBuildVersion = Parameter("mx_app_build_version")
     
     // Crashes
     
