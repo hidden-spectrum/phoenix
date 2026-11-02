@@ -2,6 +2,7 @@
 //  Copyright © 2026 Hidden Spectrum, LLC. All rights reserved.
 //
 
+import CoreData
 import Foundation
 
 
@@ -16,7 +17,6 @@ struct AnalyticsErrorParameters: AnalyticsParametersProvider {
     private let maximumDepth = 4
     private let maximumNestedErrors = 16
     private let maximumStringLength = 1_024
-    private let detailedErrorsKey = "NSDetailedErrors" // CoreData's NSDetailedErrorsKey
     
     // MARK: Lifecycle
     
@@ -84,7 +84,7 @@ struct AnalyticsErrorParameters: AnalyticsParametersProvider {
         let groups: [(String, [Error])] = [
             (NSUnderlyingErrorKey, underlying),
             (NSMultipleUnderlyingErrorsKey, userInfo[NSMultipleUnderlyingErrorsKey] as? [Error] ?? []),
-            (detailedErrorsKey, userInfo[detailedErrorsKey] as? [Error] ?? []),
+            (NSDetailedErrorsKey, userInfo[NSDetailedErrorsKey] as? [Error] ?? []),
         ]
         
         for (source, errors) in groups {
