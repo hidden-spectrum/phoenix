@@ -26,7 +26,7 @@ struct AnalyticsErrorParametersTests {
     private let leaf: NSError
     
     init() {
-        leaf = NSError(domain: "Storage", code: 7, userInfo: [NSLocalizedDescriptionKey: "Missing attachment"])
+        leaf = NSError(domain: "Storage", code: 7)
     }
     
     @Test("Swift-native errors retain their reflected type and value")
@@ -74,12 +74,8 @@ struct AnalyticsErrorParametersTests {
     
     @Test("Underlying, multiple, and detailed errors preserve their parent relationships")
     func nestedErrors() throws {
-        let wrapper = NSError(domain: "Wrapper", code: 2, userInfo: [
-            NSLocalizedDescriptionKey: "Wrapped failure",
-            NSDetailedErrorsKey: [leaf],
-        ])
+        let wrapper = NSError(domain: "Wrapper", code: 2, userInfo: [NSDetailedErrorsKey: [leaf]])
         let error = NSError(domain: "Root", code: 1, userInfo: [
-            NSLocalizedDescriptionKey: "Save failed",
             NSUnderlyingErrorKey: wrapper,
             NSMultipleUnderlyingErrorsKey: [leaf],
         ])
@@ -111,7 +107,7 @@ struct AnalyticsErrorParametersTests {
     
     @Test("Nested error count is capped at 16 and omissions are marked", arguments: [16, 17])
     func countLimit(count: Int) throws {
-        let children = (0..<count).map { NSError(domain: "Child", code: $0, userInfo: [NSLocalizedDescriptionKey: "Failure"]) }
+        let children = (0..<count).map { NSError(domain: "Child", code: $0) }
         let error = NSError(domain: "Root", code: 1, userInfo: [NSDetailedErrorsKey: children])
         let parameters = AnalyticsErrorParameters(for: error).analyticsParameters
         let expected: [[String: Any]] = (0..<16).map {
@@ -124,9 +120,9 @@ struct AnalyticsErrorParametersTests {
     
     @Test("Nested errors stop after four levels and omissions are marked", arguments: [4, 5])
     func depthLimit(depth: Int) throws {
-        var error = NSError(domain: "Chain", code: depth, userInfo: [NSLocalizedDescriptionKey: "Failure"])
+        var error = NSError(domain: "Chain", code: depth)
         for code in (0..<depth).reversed() {
-            error = NSError(domain: "Chain", code: code, userInfo: [NSLocalizedDescriptionKey: "Failure", NSUnderlyingErrorKey: error])
+            error = NSError(domain: "Chain", code: code, userInfo: [NSUnderlyingErrorKey: error])
         }
         let parameters = AnalyticsErrorParameters(for: error).analyticsParameters
         let expected: [[String: Any]] = (1...4).map { code in
@@ -145,7 +141,6 @@ struct AnalyticsErrorParametersTests {
     func stringLimit(length: Int) {
         let message = String(repeating: "é", count: length)
         let error = NSError(domain: "Root", code: 1, userInfo: [
-            NSLocalizedDescriptionKey: message,
             NSLocalizedFailureReasonErrorKey: message,
             NSLocalizedRecoverySuggestionErrorKey: message,
         ])
