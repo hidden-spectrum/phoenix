@@ -56,7 +56,6 @@ struct AnalyticsErrorParametersTests {
     @Test("NSError includes diagnostic messages without copying arbitrary userInfo")
     func nsError() {
         let error = NSError(domain: NSCocoaErrorDomain, code: 134040, userInfo: [
-            NSLocalizedDescriptionKey: "Incomplete save",
             NSLocalizedFailureReasonErrorKey: "A store failed",
             NSLocalizedRecoverySuggestionErrorKey: "Retry",
             NSFilePathErrorKey: "/private/attachment",
