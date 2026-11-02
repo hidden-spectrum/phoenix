@@ -467,13 +467,29 @@ phoenix.logTransaction(transaction)
 do {
     try riskyOperation()
 } catch {
-    phoenix.logError(
+    phoenix.log(
         error,
+        "Data sync failed",
         on: .settings,
         additionalParameters: [.init("operation"): "data_sync"]
     )
 }
 ```
+
+Error logs include:
+
+| Parameter | Description |
+| --- | --- |
+| `error_type` / `error_value` | `NSError` domain and code, or the reflected Swift type and value |
+| `error_underlying_type` / `error_underlying_value` | Domain and code of the `NSError`'s underlying error |
+| `error_failure_reason` / `error_recovery_suggestion` | Localized reason and suggestion, when available |
+| `error_nested_errors` | JSON array of nested errors (see below) |
+| `error_details_truncated` | `true` when nested errors were omitted |
+
+Nested errors are read from `NSUnderlyingErrorKey`, `NSMultipleUnderlyingErrorsKey`,
+and `NSDetailedErrorsKey`, up to 4 levels deep and 16 total. Each entry has the same
+error fields, plus `source` (the `userInfo` key) and `parent_index` (omitted for
+children of the top-level error).
 
 ## License
 
